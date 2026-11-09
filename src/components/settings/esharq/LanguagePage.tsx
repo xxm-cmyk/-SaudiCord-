@@ -11,7 +11,7 @@ import { FormSwitch } from "@components/FormSwitch";
 import { applyArabicFont, ARABIC_FONTS } from "@utils/esharqFont";
 import { t } from "@utils/esharqI18n";
 import { ARABIC_LOCALE, arabicTableSize } from "@utils/esharqLocale";
-import { readArabicFont, readGregorianDates, readPluginsArabic, writeEsharqPref } from "@utils/esharqPrefs";
+import { readArabicFont, readGregorianDates, readPluginsArabic, writeSaudiCordPref } from "@utils/esharqPrefs";
 import { setGregorianDates } from "@utils/gregorianDates";
 import { relaunch } from "@utils/native";
 import { Alerts, Forms, Select, UserSettingsActionCreators, useState } from "@webpack/common";
@@ -23,8 +23,8 @@ import { ACCENT, RADIUS, SURFACE, UNIT } from "./tokens";
 /**
  * صفحة **اللغة** — كل ما يخصّ لغة العميل في موضع واحد:
  *
- *   1. لغة ديسكورد نفسه   — العربية التي تعرضها نواة إشراق
- *   2. لغة الإضافات       — أوصاف الإضافات وإعداداتها ولوحة إشراق
+ *   1. لغة ديسكورد نفسه   — العربية التي تعرضها نواة سعودي كورد
+ *   2. لغة الإضافات       — أوصاف الإضافات وإعداداتها ولوحة سعودي كورد
  *   3. الخطّ العربي        — خطّ كل نصّ عربي في العميل
  *
  * 🔴 **التخزين في `Settings.esharq`، والقراءة عبر `esharqPrefs` وحده**:
@@ -45,7 +45,7 @@ function currentLocale(): string {
 
 /**
  * تبديل لغة ديسكورد. يُكتب في إعدادات ديسكورد نفسها (`localization.locale`)
- * لا في إعداداتنا — فهي لغته، ويجب أن تبقى بعد إزالة إشراق.
+ * لا في إعداداتنا — فهي لغته، ويجب أن تبقى بعد إزالة سعودي كورد.
  */
 async function setLocale(locale: string): Promise<void> {
     await UserSettingsActionCreators.PreloadedUserSettingsActionCreators
@@ -106,8 +106,8 @@ export function LanguagePage() {
                     }}
                     title={t("استخدم العربية في ديسكورد", "Use Arabic in Discord")}
                     description={t(
-                        "يبدّل لغة ديسكورد نفسها — وهي إعداد ديسكورد لا إعدادنا، فيبقى كما تركته حتى لو أزلت إشراق.",
-                        "Switches Discord's own language — it is Discord's setting, not ours, so it stays as you left it even if you remove Esharq."
+                        "يبدّل لغة ديسكورد نفسها — وهي إعداد ديسكورد لا إعدادنا، فيبقى كما تركته حتى لو أزلت سعودي كورد.",
+                        "Switches Discord's own language — it is Discord's setting, not ours, so it stays as you left it even if you remove SaudiCord."
                     )}
                     hideBorder
                 />
@@ -117,14 +117,14 @@ export function LanguagePage() {
                 index={1}
                 title={t("لغة الإضافات", "Plugins language")}
                 subtitle={t(
-                    "يُعرّب وصف الإضافات مع إعداداتها. وهي منفصلة عن لغة ديسكورد: تستطيع إبقاء ديسكورد إنجليزياً ولوحة إشراق عربية، أو العكس.",
-                    "Localizes plugin descriptions along with their settings. Independent of Discord's language: you can keep Discord in English and the Esharq panel in Arabic, or the reverse."
+                    "يُعرّب وصف الإضافات مع إعداداتها. وهي منفصلة عن لغة ديسكورد: تستطيع إبقاء ديسكورد إنجليزياً ولوحة سعودي كورد عربية، أو العكس.",
+                    "Localizes plugin descriptions along with their settings. Independent of Discord's language: you can keep Discord in English and the SaudiCord panel in Arabic, or the reverse."
                 )}
             >
                 <FormSwitch
                     value={pluginsArabic}
                     onChange={(value: boolean) => {
-                        writeEsharqPref("pluginsArabic", value);
+                        writeSaudiCordPref("pluginsArabic", value);
                         setPluginsArabic(value);
                         setRestartPending(true);
 
@@ -192,7 +192,7 @@ export function LanguagePage() {
                     isSelected={(value: string) => value === font}
                     serialize={(value: string) => value}
                     select={(value: string) => {
-                        writeEsharqPref("arabicFont", value);
+                        writeSaudiCordPref("arabicFont", value);
                         applyArabicFont(value);
                         setFont(value);
                     }}
@@ -217,7 +217,7 @@ export function LanguagePage() {
                     value={gregorian}
                     onChange={(value: boolean) => {
                         // يُطبَّق فوراً بلا إعادة تشغيل: تشغيلٌ/إيقافٌ للمراقب مباشرةً.
-                        writeEsharqPref("gregorianDates", value);
+                        writeSaudiCordPref("gregorianDates", value);
                         setGregorian(value);
                         setGregorianDates(value);
                     }}
