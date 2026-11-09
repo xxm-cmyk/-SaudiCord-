@@ -33,6 +33,7 @@ import { sha256Hex } from "@utils/sha256";
 import definePlugin from "@utils/types";
 import { ContextMenuApi, GuildMemberStore, Menu, Toasts, Tooltip, UserStore } from "@webpack/common";
 
+import { SAUDICORD_LOGO } from "@components/settings/esharqLogo";
 import Plugins, { PluginMeta } from "~plugins";
 
 import { isHiddenLocally, startLinkCapture, stopLinkCapture } from "./control";
@@ -58,7 +59,7 @@ const ESHARQ_TIER_META = {
     user: { img: "user/user.png", label: "مستخدم إشراق · Esharq User" },
 } as const;
 
-const tierIcon = (tier: keyof typeof ESHARQ_TIER_META) => ESHARQ_BADGES + ESHARQ_TIER_META[tier].img;
+const tierIcon = (tier: keyof typeof ESHARQ_TIER_META) => tier === "user" ? SAUDICORD_LOGO : ESHARQ_BADGES + ESHARQ_TIER_META[tier].img;
 
 // شارة الرتبة الممنوحة (واحدة لكلّ عضو — أعلى رتبة يملكها). الصقل البصريّ
 // (قصّ دائريّ، حلقة، تكبير عند المرور) في esharqBadges.css عبر aria-label،
