@@ -28,7 +28,7 @@ import { readdirSync, readFileSync, statSync } from "fs";
 import { join } from "path";
 
 const ROOT = new URL("..", import.meta.url).pathname.replace(/^\/(\w:)/, "$1");
-const DICT = join(ROOT, "src/SaudiCord plugins/DiscordArabicizer/translations.ts");
+const DICT = join(ROOT, "src/esharqplugins/DiscordArabicizer/translations.ts");
 const ESHARQPLUGINS = join(ROOT, "src/esharqplugins");
 const OVERLAYS = join(ROOT, "src/i18n/plugins");
 
@@ -117,7 +117,7 @@ for (const dir of readdirSync(ESHARQPLUGINS)) {
     else uncovered.push(dir);
 }
 console.log(`  ${covered} plugins localized (overlay or inline t)`);
-for (const dir of uncovered) warn(`src/SaudiCord plugins/${dir} has no i18n overlay and no inline t() — Arabic users see English only`);
+for (const dir of uncovered) warn(`src/esharqplugins/${dir} has no i18n overlay and no inline t() — Arabic users see English only`);
 
 // ── 3. plugin directories contain only plugins (HARD FAIL) ───────────────────
 //
