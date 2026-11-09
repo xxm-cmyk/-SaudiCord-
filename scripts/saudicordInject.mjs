@@ -5,7 +5,7 @@
  */
 
 /**
- * مُثبِّت إشراق — **مستقلّ تماماً**، بلا `EquilotlCli` وبلا أي تبعية.
+ * مُثبِّت سعودي كورد — **مستقلّ تماماً**، بلا `EquilotlCli` وبلا أي تبعية.
  *
  *   node scripts/saudicordInject.mjs --branch canary
  *   node scripts/saudicordInject.mjs --branch canary --uninstall
@@ -15,7 +15,7 @@
  *
  * المُثبِّت الخارجي كان يكتب في ديسكورد سطراً واحداً:
  * `require("%APPDATA%\\Equicord\\equicord.asar")` — أي أن **بصمة التثبيت
- * ومسار الحمولة باسم مشروع آخر**. إشراق نسخة مستقلّة بإشاراتها، فحمولته
+ * ومسار الحمولة باسم مشروع آخر**. سعودي كورد نسخة مستقلّة بإشاراتها، فحمولته
  * في `%APPDATA%\SaudiCord\saudicord.asar` ومُثبِّته من عنده.
  *
  * ## الآلية (مُثبَتة عملياً على ديسكورد حديث)
@@ -138,7 +138,7 @@ const LEGACY_PAYLOAD_DIR = join(process.env.APPDATA ?? process.env.HOME ?? ".", 
 /**
  * مدخل بناء المطوّر داخل المستودع نفسه.
  *
- * 🔴 **لماذا مسارٌ لا نسخة**: مُحدِّث إشراق في بناء المطوّر يمرّ عبر git
+ * 🔴 **لماذا مسارٌ لا نسخة**: مُحدِّث سعودي كورد في بناء المطوّر يمرّ عبر git
  * (`IS_STANDALONE === false` ⇒ `src/main/updater/git.ts`)، وهو يشتقّ مكان
  * المستودع من `__dirname` وحده: `join(__dirname, "..")` للأوامر و
  * `join(__dirname, "../../")` لتشغيل البناء. فحين تُنسَخ الحزمة إلى
@@ -249,7 +249,7 @@ if (standalone && !existsSync(BUILT)) {
 /** ما سيُحمّله ديسكورد فعلاً. */
 const TARGET = standalone ? PAYLOAD : DEV_ENTRY;
 
-// 🔴 تثبيت مُعدِّل آخر: نتوقّف. استبداله يكسر تثبيته ويُلام عليه إشراق.
+// 🔴 تثبيت مُعدِّل آخر: نتوقّف. استبداله يكسر تثبيته ويُلام عليه سعودي كورد.
 if (existsSync(BACKUP) && !isOurs()) {
     fail("_app.asar موجود و app.asar ليس أرشيفنا — مُعدِّل آخر مثبَّت. أزله أوّلاً.");
 }
@@ -259,7 +259,7 @@ if (standalone) {
     copyFileSync(BUILT, PAYLOAD);
 }
 
-const indexJs = `// مُولَّد بواسطة إشراق — لا تُحرّره.
+const indexJs = `// مُولَّد بواسطة سعودي كورد — لا تُحرّره.
 require(${JSON.stringify(TARGET)});
 `;
 
@@ -312,7 +312,7 @@ if (!existsSync(BACKUP)) {
     }
 }
 
-console.log(`✔ ثُبِّت إشراق في ${RESOURCES}`);
+console.log(`✔ ثُبِّت سعودي كورد في ${RESOURCES}`);
 // يُقال الفرع صراحةً: بلا وسائط يُختار المستقرّ، ومن ظنّ أنه يحقن كناري
 // يرى هنا أنه لم يفعل — بدل أن يكتشفه بعد إعادة تشغيل لا تُغيّر شيئاً.
 console.log(`  الفرع     : ${branch ?? "stable (افتراضي)"}`);
