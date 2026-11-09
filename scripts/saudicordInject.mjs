@@ -31,7 +31,7 @@ import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, renameS
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import { packAsar, readAsarFile } from "./esharq/asar.mjs";
+import { packAsar, readAsarFile } from "./saudicord/asar.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
