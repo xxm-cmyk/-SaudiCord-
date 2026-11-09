@@ -104,6 +104,9 @@ export function writeEsharqPref(key: PrefKey, value: unknown): void {
     } catch { /* مخزن غير جاهز — يُعاد المحاولة عند القراءة التالية */ }
 }
 
+/** SaudiCord-facing name; the legacy export remains for existing internal callers. */
+export const writeSaudiCordPref = writeEsharqPref;
+
 /**
  * ترحيل **المفتاحين معاً مرّة واحدة**، ثم تُرفع العلامة.
  *
