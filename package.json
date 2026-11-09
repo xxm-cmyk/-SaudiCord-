@@ -1,15 +1,15 @@
 {
-    "name": "equicord",
+    "name": "saudicord",
     "private": "true",
     "version": "1.15.6.0",
-    "description": "Esharq — The Arabic Discord client mod",
-    "homepage": "https://github.com/LOSTSTR/Esharq#readme",
+    "description": "SaudiCord — Arabic-first Discord client mod",
+    "homepage": "https://github.com/xxm-cmyk/-SaudiCord-#readme",
     "bugs": {
-        "url": "https://github.com/LOSTSTR/Esharq/issues"
+        "url": "https://github.com/xxm-cmyk/-SaudiCord-/issues"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/LOSTSTR/Esharq.git"
+        "url": "git+https://github.com/xxm-cmyk/-SaudiCord-.git"
     },
     "license": "GPL-3.0-or-later",
     "author": "LOSTSTR <noreply@github.com>",
@@ -40,7 +40,6 @@
         "testWeb": "pnpm lint:fix && pnpm buildWeb && pnpm testTsc",
         "lint:overlay": "node scripts/lintOverlayOptions.mjs",
         "testTsc": "tsc --noEmit",
-        "testEsharq": "node scripts/esharqCheck.mjs && node scripts/lintOverlayOptions.mjs && pnpm testCoverage && pnpm testPrefs && pnpm testRedact && pnpm testCommunity && pnpm testThemeLibrary && pnpm testIntlAst && pnpm intl:lint && node scripts/esharqSecurityAudit.mjs && tsc --noEmit -p tsconfig.esharq.json && stylelint \"src/esharqplugins/**/*.css\"",
         "securityAudit": "node scripts/esharqSecurityAudit.mjs",
         "inject:canary": "node scripts/esharqInject.mjs --branch canary",
         "uninject:canary": "node scripts/esharqInject.mjs --branch canary --uninstall",
@@ -54,7 +53,8 @@
         "testRedact": "tsx scripts/esharq/redactSelfTest.ts",
         "testCommunity": "tsx scripts/esharq/communityValidateSelfTest.ts",
         "testIntlAst": "node scripts/esharq/intlAstSelfTest.mjs",
-        "testThemeLibrary": "tsx scripts/esharq/themeLibraryParseSelfTest.ts"
+        "testThemeLibrary": "tsx scripts/esharq/themeLibraryParseSelfTest.ts",
+        "testSaudiCord": "node scripts/esharqCheck.mjs && node scripts/lintOverlayOptions.mjs && pnpm testCoverage && pnpm testPrefs && pnpm testRedact && pnpm testCommunity && pnpm testThemeLibrary && pnpm testIntlAst && pnpm intl:lint && node scripts/esharqSecurityAudit.mjs && tsc --noEmit -p tsconfig.esharq.json && stylelint \"src/esharqplugins/**/*.css\""
     },
     "dependencies": {
         "@ffmpeg/ffmpeg": "^0.12.10",
