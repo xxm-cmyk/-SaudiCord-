@@ -28,8 +28,8 @@
         "generateEquicordPluginJson": "tsx scripts/generatePluginList.ts --equicord",
         "generateVencordPluginJson": "tsx scripts/generatePluginList.ts --vencord",
         "generateTypes": "tspc --emitDeclarationOnly --declaration --outDir packages/vencord-types --allowJs false",
-        "inject": "node scripts/esharqInject.mjs",
-        "uninject": "node scripts/esharqInject.mjs --uninstall",
+        "inject": "node scripts/saudicordInject.mjs",
+        "uninject": "node scripts/saudicordInject.mjs --uninstall",
         "lint": "eslint",
         "lint-styles": "stylelint \"src/**/*.css\" --ignore-pattern src/userplugins --ignore-pattern src/esharqplugins",
         "lint-styles:fix": "pnpm lint-styles --fix",
@@ -40,9 +40,9 @@
         "testWeb": "pnpm lint:fix && pnpm buildWeb && pnpm testTsc",
         "lint:overlay": "node scripts/lintOverlayOptions.mjs",
         "testTsc": "tsc --noEmit",
-        "securityAudit": "node scripts/esharqSecurityAudit.mjs",
-        "inject:canary": "node scripts/esharqInject.mjs --branch canary",
-        "uninject:canary": "node scripts/esharqInject.mjs --branch canary --uninstall",
+        "securityAudit": "node scripts/saudicordSecurityAudit.mjs",
+        "inject:canary": "node scripts/saudicordInject.mjs --branch canary",
+        "uninject:canary": "node scripts/saudicordInject.mjs --branch canary --uninstall",
         "intl:harvest": "node scripts/esharq/harvestIntl.mjs",
         "intl:accept": "node scripts/esharq/harvestIntl.mjs --accept",
         "intl:build": "node scripts/esharq/buildArabicTable.mjs",
@@ -54,7 +54,7 @@
         "testCommunity": "tsx scripts/esharq/communityValidateSelfTest.ts",
         "testIntlAst": "node scripts/esharq/intlAstSelfTest.mjs",
         "testThemeLibrary": "tsx scripts/esharq/themeLibraryParseSelfTest.ts",
-        "testSaudiCord": "node scripts/esharqCheck.mjs && node scripts/lintOverlayOptions.mjs && pnpm testCoverage && pnpm testPrefs && pnpm testRedact && pnpm testCommunity && pnpm testThemeLibrary && pnpm testIntlAst && pnpm intl:lint && node scripts/esharqSecurityAudit.mjs && tsc --noEmit -p tsconfig.esharq.json && stylelint \"src/esharqplugins/**/*.css\""
+        "testSaudiCord": "node scripts/saudicordCheck.mjs && node scripts/lintOverlayOptions.mjs && pnpm testCoverage && pnpm testPrefs && pnpm testRedact && pnpm testCommunity && pnpm testThemeLibrary && pnpm testIntlAst && pnpm intl:lint && node scripts/saudicordSecurityAudit.mjs && tsc --noEmit -p tsconfig.esharq.json && stylelint \"src/esharqplugins/**/*.css\""
     },
     "dependencies": {
         "@ffmpeg/ffmpeg": "^0.12.10",
