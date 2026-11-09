@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-// Minimal shared AI helper for Esharq plugins. Uses Groq's OpenAI-compatible endpoint with each
+// Minimal shared AI helper for SaudiCord plugins. Uses Groq's OpenAI-compatible endpoint with each
 // user's OWN free API key (console.groq.com/keys), stored in that plugin's own settings. No key
 // is ever placed in the source, and there is no shared/hardcoded key — every user creates their
 // own. This keeps requests private, avoids abuse/bans of a shared key, and leaks nothing publicly.
@@ -26,7 +26,7 @@ export const GROQ_MODEL_OPTIONS = [
 
 const GROQ_ENDPOINT = "https://api.groq.com/openai/v1/chat/completions";
 
-export interface EsharqChatOptions {
+export interface SaudiCordChatOptions {
     apiKey: string;
     messages: AIChatMessage[];
     model?: string;
@@ -34,7 +34,7 @@ export interface EsharqChatOptions {
     maxTokens?: number;
 }
 
-export async function esharqChat({ apiKey, messages, model, temperature = 0.7, maxTokens = 1000 }: EsharqChatOptions): Promise<string> {
+export async function esharqChat({ apiKey, messages, model, temperature = 0.7, maxTokens = 1000 }: SaudiCordChatOptions): Promise<string> {
     const key = apiKey?.trim();
     if (!key) throw new Error("No Groq API key set. Create a free key at console.groq.com/keys and paste it in the plugin settings.");
 
