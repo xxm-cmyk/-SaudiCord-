@@ -66,7 +66,7 @@ const ALLOWED_HOSTS = new Map([
     ["gofile.io", ["upload", "BigFileUploadEnhanced — disclaimed"]],
     ["file.fast", ["upload", "BigFileUploadEnhanced — disclaimed"]],
     ["embeds.video", ["link", "BigFileUploadEnhanced — playback page for an upload"]],
-    ["esharq.org", ["api", "Esharq site / badge studio"]],
+    ["esharq.org", ["api", "SaudiCord site / badge studio"]],
     ["ko-fi.com", ["link", "donation link"]],
     ["discohook.org", ["link", "EmbedBuilder — opens the embed in a web editor"]],
     ["www.google.com", ["link", "MetadataViewer — reverse image search"]],
