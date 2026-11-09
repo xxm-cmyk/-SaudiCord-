@@ -8,7 +8,7 @@ import { Notice } from "@components/Notice";
 import { t } from "@utils/esharqI18n";
 
 /**
- * A reusable bilingual "⚠️ this may get you banned" notice for Esharq plugins whose
+ * A reusable bilingual "⚠️ this may get you banned" notice for SaudiCord plugins whose
  * behaviour can violate Discord's Terms of Service (voice moderation bypass, fake nitro,
  * silent delete/edit, …). Drop it at the top of a plugin's settings via an
  * `OptionType.COMPONENT` entry so the warning is visible before the user enables anything.
