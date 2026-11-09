@@ -5,13 +5,13 @@
  */
 
 /**
- * **قياس إقلاع إشراق** — كم تكلّف كل إضافة، عند كل مستخدم.
+ * **قياس إقلاع سعودي كورد** — كم تكلّف كل إضافة، عند كل مستخدم.
  *
  * ## لماذا كُتب هذا أصلاً
  *
  * قياس ڤينكورد لا يعمل عند المستخدم: `traceFunction` تصير `noopTracer` خارج
  * `IS_DEV`/`IS_REPORTER` (`Tracer.ts`)، و`patchTimings` لا تُملأ إلّا في
- * `IS_REPORTER` (`patchWebpack.ts`). فمن يُشغّل إشراق من المُثبِّت **لا يملك
+ * `IS_REPORTER` (`patchWebpack.ts`). فمن يُشغّل سعودي كورد من المُثبِّت **لا يملك
  * رقماً واحداً** عن إضافاته. وسؤال «أي إضافة تُبطئ إقلاعي؟» لا جواب له بغير
  * قياسٍ يعمل عنده هو.
  *
@@ -77,7 +77,7 @@ export function recordPatch(plugin: string, ms: number) {
     record.patchCount++;
 }
 
-/** علامة مرحلة في إقلاع إشراق نفسه. */
+/** علامة مرحلة في إقلاع سعودي كورد نفسه. */
 export function markPhase(name: string) {
     phases.push({ name, at: performance.now() });
 }
