@@ -27,7 +27,7 @@ import ErrorBoundary from "@components/ErrorBoundary";
 import { HeadingTertiary } from "@components/Heading";
 import { Paragraph } from "@components/Paragraph";
 import { SettingsTab } from "@components/settings";
-import { Card as EsharqCard } from "@components/settings/esharq/Card";
+import { Card as SaudiCordCard } from "@components/settings/esharq/Card";
 import { CategoryFilter } from "@components/settings/esharq/CategoryFilter";
 import { PluginsHeader } from "@components/settings/esharq/PluginsHeader";
 import { debounce } from "@shared/debounce";
@@ -224,11 +224,11 @@ export default function PluginSettings() {
                 break;
             case SearchStatus.EQUICORD:
                 if (!PluginMeta[plugin.name].folderName.startsWith("src/equicordplugins/")) return false;
-                // Esharq-branded plugins live here too but belong under "Show SaudiCord", not Equicord.
+                // SaudiCord-branded plugins live here too but belong under "Show SaudiCord", not Equicord.
                 if (FORK_EXCLUSIVE_PLUGINS.has(plugin.name)) return false;
                 break;
             case SearchStatus.ESHARQ:
-                // Esharq-branded plugins only — same predicate that shows the EA badge
+                // SaudiCord-branded plugins only — same predicate that shows the EA badge
                 // in PluginCard (isForkBranded = fork-exclusive OR userplugin).
                 if (!FORK_EXCLUSIVE_PLUGINS.has(plugin.name)
                     && !PluginMeta[plugin.name].folderName.startsWith("src/userplugins/")
@@ -236,9 +236,9 @@ export default function PluginSettings() {
                 break;
             case SearchStatus.VENCORD:
                 if (!PluginMeta[plugin.name].folderName.startsWith("src/plugins/")) return false;
-                // ونظير حالة Equicord أعلاه: إضافة إشراق قد تسكن `src/plugins/_core/`
+                // ونظير حالة Equicord أعلاه: إضافة SaudiCord قد تسكن `src/plugins/_core/`
                 // بالضرورة (تُستورَد قبل أي رقعة)، فترشيحُ المسار وحده يُدرجها تحت
-                // Vencord بينما تحمل شارة إشراق — تناقضٌ يراه المستخدم في القائمة نفسها.
+                // Vencord بينما تحمل شارة SaudiCord — تناقضٌ يراه المستخدم في القائمة نفسها.
                 if (FORK_EXCLUSIVE_PLUGINS.has(plugin.name)) return false;
                 break;
             case SearchStatus.NEW:
@@ -447,21 +447,21 @@ export default function PluginSettings() {
         });
     }
 
-    const { totalStockPlugins, totalUserPlugins, totalEsharqPlugins, enabledStockPlugins, enabledUserPlugins, enabledPlugins } = useMemo(() => {
+    const { totalStockPlugins, totalUserPlugins, totalSaudiCordPlugins, enabledStockPlugins, enabledUserPlugins, enabledPlugins } = useMemo(() => {
         const isApiPlugin = (plugin: string) => plugin.endsWith("API") || Plugins[plugin].required;
 
         const totalPlugins = Object.keys(Plugins).filter(p => !isApiPlugin(p));
         const enabledPlugins = Object.keys(Plugins).filter(p => isPluginEnabled(p) && !isApiPlugin(p));
 
-        // إضافات إشراق: تُعرف بمجلدها لا باسمها — نفس مصدر شارة الفرع.
-        const totalEsharqPlugins = totalPlugins.filter(p =>
+        // إضافات SaudiCord: تُعرف بمجلدها لا باسمها — نفس مصدر شارة الفرع.
+        const totalSaudiCordPlugins = totalPlugins.filter(p =>
             PluginMeta[p].folderName?.startsWith("src/esharqplugins/") && !Plugins[p].hidden).length;
 
         const totalStockPlugins = totalPlugins.filter(p => !PluginMeta[p].userPlugin && !Plugins[p].hidden).length;
         const totalUserPlugins = totalPlugins.filter(p => PluginMeta[p].userPlugin).length;
         const enabledStockPlugins = enabledPlugins.filter(p => !PluginMeta[p].userPlugin).length;
         const enabledUserPlugins = enabledPlugins.filter(p => PluginMeta[p].userPlugin).length;
-        return { totalStockPlugins, totalUserPlugins, totalEsharqPlugins, enabledStockPlugins, enabledUserPlugins, enabledPlugins };
+        return { totalStockPlugins, totalUserPlugins, totalSaudiCordPlugins, enabledStockPlugins, enabledUserPlugins, enabledPlugins };
     }, [settings.plugins]);
 
     /** كم إضافة في كل فئة — يُحسب مرّة، فاللوحة تعرضه بلا مرور جديد. */
@@ -523,9 +523,9 @@ export default function PluginSettings() {
                 <ErrorBoundary noop>
                     <div className="esharq-bisect-banner">
                         {bisectLive
-                            ? t(`جلسة تنصيف انهيار جارية: ${bisectCount} إضافة مخفيّة مؤقّتاً ومفاتيحها مُعطَّلة. إعداداتك لم تتغيّر — أنهِ الجلسة من «الأمان والصحّة ← تنصيف الانهيار» ثمّ أعد تشغيل إشراق لتعود.`,
+                            ? t(`جلسة تنصيف انهيار جارية: ${bisectCount} إضافة مخفيّة مؤقّتاً ومفاتيحها مُعطَّلة. إعداداتك لم تتغيّر — أنهِ الجلسة من «الأمان والصحّة ← تنصيف الانهيار» ثمّ أعد تشغيل SaudiCord لتعود.`,
                                 `A crash-bisect session is running: ${bisectCount} plugins are temporarily hidden and their toggles disabled. Your settings are untouched — end the session from “Safety & Health → Crash Bisect”, then restart SaudiCord to bring them back.`)
-                            : t(`انتهت جلسة تنصيف الانهيار، لكن ${bisectCount} إضافة تبقى مخفيّة حتى إعادة التشغيل. إعداداتك لم تتغيّر — أعد تشغيل إشراق لتعود.`,
+                            : t(`انتهت جلسة تنصيف الانهيار، لكن ${bisectCount} إضافة تبقى مخفيّة حتى إعادة التشغيل. إعداداتك لم تتغيّر — أعد تشغيل SaudiCord لتعود.`,
                                 `The crash-bisect session has ended, but ${bisectCount} plugins stay hidden until you restart. Your settings are untouched — restart SaudiCord to bring them back.`)}
                     </div>
                 </ErrorBoundary>
@@ -534,7 +534,7 @@ export default function PluginSettings() {
             <PluginsHeader
                 total={totalStockPlugins + totalUserPlugins}
                 enabled={enabledStockPlugins + enabledUserPlugins}
-                esharq={totalEsharqPlugins}
+                esharq={totalSaudiCordPlugins}
                 userPlugins={totalUserPlugins}
                 onDisableAll={() => openWarningModal(null, undefined, false, enabledPlugins.length, resetCheckAndDo)}
                 onRestoreDefaults={restoreDefaultConfiguration}
@@ -546,7 +546,7 @@ export default function PluginSettings() {
 
             {/* 🔴 عدّاد النتيجة في شارة البطاقة: بدونه لا يعرف من ضيّق البحث إن
                 كان الترشيح وقع أصلاً أم أن ما يراه هو كل شيء. */}
-            <EsharqCard
+            <SaudiCordCard
                 index={0}
                 title={t("المرشِّحات", "Filters")}
                 subtitle={t(
@@ -603,9 +603,9 @@ export default function PluginSettings() {
                     />
                 </div>
             </ErrorBoundary>
-            </EsharqCard>
+            </SaudiCordCard>
 
-            <EsharqCard index={1} title={t("الإضافات", "Plugins")}>
+            <SaudiCordCard index={1} title={t("الإضافات", "Plugins")}>
                 {plugins.length || requiredPlugins.length
                     ? (
                         <>
@@ -622,9 +622,9 @@ export default function PluginSettings() {
                     )
                     : <ExcludedPluginsList search={search} />
                 }
-            </EsharqCard>
+            </SaudiCordCard>
 
-            <EsharqCard
+            <SaudiCordCard
                 index={2}
                 title={t("الإضافات المطلوبة", "Required plugins")}
                 subtitle={t(
@@ -639,7 +639,7 @@ export default function PluginSettings() {
                         : <Paragraph>{t("لا توجد إضافات تطابق معايير البحث.", "No plugins match your search criteria.")}</Paragraph>
                     }
                 </div>
-            </EsharqCard>
+            </SaudiCordCard>
         </SettingsTab >
     );
 }
