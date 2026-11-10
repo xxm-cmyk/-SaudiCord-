@@ -144,8 +144,8 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
             // منها وحدها يجعل الثلاثة تبدو ثلاثة أنظمة لا صفّاً واحداً.
             condition: isForkBranded,
             src: USERPLUGINS_ICON_URI,
-            alt: "Esharq",
-            title: "Esharq Plugin"
+            alt: "SaudiCord",
+            title: "SaudiCord Plugin"
         },
         {
             condition: isEquicordPlugin,
@@ -176,8 +176,8 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
 
     // والشرح يوضع على المفتاح نفسه، وهو ما يُحوّم عليه من يراه رمادياً.
     const toggleTooltip = hiddenByBisect
-        ? t("مخفيّة مؤقّتاً بجلسة تنصيف انهيار. إعداداتك لم تتغيّر — تعود بعد إعادة تشغيل إشراق.",
-            "Temporarily hidden by a crash-bisect session. Your settings are untouched — it returns after you restart Esharq.")
+        ? t("مخفيّة مؤقّتاً بجلسة تنصيف انهيار. إعداداتك لم تتغيّر — تعود بعد إعادة تشغيل SaudiCord.",
+            "Temporarily hidden by a crash-bisect session. Your settings are untouched — it returns after you restart SaudiCord.")
         : undefined;
 
     return (
