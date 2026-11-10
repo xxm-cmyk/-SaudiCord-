@@ -110,8 +110,8 @@ export const ExcludedReasons: Record<PluginTarget, string> = {
     vesktop: t("تطبيقات Vesktop/Equibop", "Vesktop/Equibop"),
     equibop: t("تطبيقات Vesktop/Equibop", "Vesktop/Equibop"),
     web: t("تطبيقات Vesktop/Equibop ومتصفح Discord", "Vesktop/Equibop and Discord web"),
-    dev: t("إصدار المطورين من اشراق", "Esharq dev build"),
-    browser: t("نسخة متصفح الويب من إشراق", "Web browser version of Esharq")
+    dev: t("إصدار المطورين من SaudiCord", "SaudiCord dev build"),
+    browser: t("نسخة متصفح الويب من SaudiCord", "Web browser version of SaudiCord")
 };
 
 function ExcludedPluginsList({ search }: { search: string; }) {
@@ -224,7 +224,7 @@ export default function PluginSettings() {
                 break;
             case SearchStatus.EQUICORD:
                 if (!PluginMeta[plugin.name].folderName.startsWith("src/equicordplugins/")) return false;
-                // Esharq-branded plugins live here too but belong under "Show Esharq", not Equicord.
+                // Esharq-branded plugins live here too but belong under "Show SaudiCord", not Equicord.
                 if (FORK_EXCLUSIVE_PLUGINS.has(plugin.name)) return false;
                 break;
             case SearchStatus.ESHARQ:
@@ -301,7 +301,7 @@ export default function PluginSettings() {
 
             if (isRequired) {
                 const tooltipText = p.required || !depMap[p.name]
-                    ? t("هذه الإضافة ضرورية لعمل Esharq.", "This plugin is required for Esharq to function.")
+                    ? t("هذه الإضافة ضرورية لعمل SaudiCord.", "This plugin is required for SaudiCord to function.")
                     : <PluginDependencyList deps={depMap[p.name]?.filter(d => settings.plugins[d].enabled)} />;
 
                 requiredPlugins.push(
@@ -373,7 +373,7 @@ export default function PluginSettings() {
     }
 
     /**
-     * إعادة الضبط الافتراضي — **إلى ما تُشحن به إشراق، لا إلى الفراغ**.
+     * إعادة الضبط الافتراضي — **إلى ما تُشحن به SaudiCord، لا إلى الفراغ**.
      *
      * «عطّل الكل» يترك المستخدم بعميل خامد؛ وهذا يُعيده إلى نقطة معروفة:
      * ما كان مُفعَّلاً يوم ثبّت.
@@ -419,8 +419,8 @@ export default function PluginSettings() {
             body: (
                 <>
                     <p style={{ textAlign: "center" }}>
-                        {t(`سيتغيّر تفعيل ${changed.length} إضافة لتعود إلى ما تُشحن به إشراق.`,
-                            `${changed.length} plugins will change state to match what Esharq ships with.`)}
+                        {t(`سيتغيّر تفعيل ${changed.length} إضافة لتعود إلى ما تُشحن به SaudiCord.`,
+                            `${changed.length} plugins will change state to match what SaudiCord ships with.`)}
                     </p>
                     <p style={{ textAlign: "center" }}>
                         {t("إعداداتك داخل كل إضافة تبقى كما هي.", "Your settings inside each plugin are left untouched.")}
@@ -524,9 +524,9 @@ export default function PluginSettings() {
                     <div className="esharq-bisect-banner">
                         {bisectLive
                             ? t(`جلسة تنصيف انهيار جارية: ${bisectCount} إضافة مخفيّة مؤقّتاً ومفاتيحها مُعطَّلة. إعداداتك لم تتغيّر — أنهِ الجلسة من «الأمان والصحّة ← تنصيف الانهيار» ثمّ أعد تشغيل إشراق لتعود.`,
-                                `A crash-bisect session is running: ${bisectCount} plugins are temporarily hidden and their toggles disabled. Your settings are untouched — end the session from “Safety & Health → Crash Bisect”, then restart Esharq to bring them back.`)
+                                `A crash-bisect session is running: ${bisectCount} plugins are temporarily hidden and their toggles disabled. Your settings are untouched — end the session from “Safety & Health → Crash Bisect”, then restart SaudiCord to bring them back.`)
                             : t(`انتهت جلسة تنصيف الانهيار، لكن ${bisectCount} إضافة تبقى مخفيّة حتى إعادة التشغيل. إعداداتك لم تتغيّر — أعد تشغيل إشراق لتعود.`,
-                                `The crash-bisect session has ended, but ${bisectCount} plugins stay hidden until you restart. Your settings are untouched — restart Esharq to bring them back.`)}
+                                `The crash-bisect session has ended, but ${bisectCount} plugins stay hidden until you restart. Your settings are untouched — restart SaudiCord to bring them back.`)}
                     </div>
                 </ErrorBoundary>
             )}
@@ -581,7 +581,7 @@ export default function PluginSettings() {
                             { label: t("عرض المفضّلة", "Show Favorites"), value: SearchStatus.FAVORITES },
                             { label: t("عرض المفعَّلة", "Show Enabled"), value: SearchStatus.ENABLED },
                             { label: t("عرض المعطَّلة", "Show Disabled"), value: SearchStatus.DISABLED },
-                            { label: t("عرض Esharq", "Show Esharq"), value: SearchStatus.ESHARQ },
+                            { label: t("عرض SaudiCord", "Show SaudiCord"), value: SearchStatus.ESHARQ },
                             { label: t("عرض Equicord", "Show Equicord"), value: SearchStatus.EQUICORD },
                             { label: t("عرض Vencord", "Show Vencord"), value: SearchStatus.VENCORD },
                             { label: t("عرض الجديدة", "Show New"), value: SearchStatus.NEW },
@@ -628,8 +628,8 @@ export default function PluginSettings() {
                 index={2}
                 title={t("الإضافات المطلوبة", "Required plugins")}
                 subtitle={t(
-                    "أساس إشراق نفسه. هذه لا تُعطَّل لأن بقيّة الإضافات تقوم عليها.",
-                    "Esharq's own foundation. These cannot be disabled because the rest is built on them."
+                    "أساس SaudiCord نفسه. هذه لا تُعطَّل لأن بقيّة الإضافات تقوم عليها.",
+                    "SaudiCord's own foundation. These cannot be disabled because the rest is built on them."
                 )}
                 badge={String(requiredPlugins.length)} badgeTone="info"
             >
