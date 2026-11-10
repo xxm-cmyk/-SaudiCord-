@@ -242,7 +242,7 @@
 }
 
 /* «مستخدم إشراق» شارة iconSrc عادية، فتُستهدَف بـaria-label مثل شارات ديسكورد */
-a[aria-label*="Esharq User"] img {
+a[aria-label*="SaudiCord User"] img {
     border-radius: 0;
     object-fit: contain;
     filter: drop-shadow(0 0 3px rgb(34 201 240 / 55%));
@@ -270,7 +270,7 @@ a[aria-label*="Esharq User"] img {
     filter: drop-shadow(0 0 3px rgb(255 78 155 / 55%));
 }
 
-a[aria-label*="Esharq User"]:hover img {
+a[aria-label*="SaudiCord User"]:hover img {
     transform: scale(1.14);
 }
 
