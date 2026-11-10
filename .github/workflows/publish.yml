@@ -13,7 +13,7 @@ permissions:
 jobs:
     release:
         # المستودع العام فقط — الخاص نسخة احتياطية لا تنشر امتداد المتصفّح.
-        if: github.repository == 'LOSTSTR/Esharq'
+        if: github.repository == 'xxm-cmyk/-SaudiCord-' && vars.PUBLISH_BROWSER_EXTENSIONS == 'true'
         runs-on: ubuntu-latest
 
         steps:
