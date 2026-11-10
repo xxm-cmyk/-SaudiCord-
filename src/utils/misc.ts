@@ -19,7 +19,7 @@
 import { User } from "@vencord/discord-types";
 import { ChannelStore, GuildMemberStore, IconUtils } from "@webpack/common";
 
-import { EQUICORD_HELPERS, EquicordDevsById, ESHARQ_TIERS, EsharqTeamSeed, type EsharqTier, GUILD_ID, KNOWN_ISSUES_CHANNEL_ID, KNOWN_ISSUES_CHANNEL_IDS, SUPPORT_CHANNEL_ID, SUPPORT_CHANNEL_IDS, VencordDevsById } from "./constants";
+import { EQUICORD_HELPERS, EquicordDevsById, ESHARQ_TIERS, SaudiCordTeamSeed, type SaudiCordTier, GUILD_ID, KNOWN_ISSUES_CHANNEL_ID, KNOWN_ISSUES_CHANNEL_IDS, SUPPORT_CHANNEL_ID, SUPPORT_CHANNEL_IDS, VencordDevsById } from "./constants";
 
 /**
  * Calls .join(" ") on the arguments
@@ -84,25 +84,25 @@ export const shouldShowContributorBadge = (id: string) => isPluginDev(id) && Ven
 export const isEquicordPluginDev = (id: string) => Object.hasOwn(EquicordDevsById, id);
 export const shouldShowEquicordContributorBadge = (id: string) => isEquicordPluginDev(id) && EquicordDevsById[id].badge !== false;
 
-// رتب إشراق الحيّة — تُبذَر من الثوابت المُصرَّفة (احتياط بلا شبكة، ولا وميض عند
-// الإقلاع) ثمّ تُستبدَل وقت التشغيل من Esharq-Bored/team.json عبر BadgeAPI، فتُمنَح
+// رتب SaudiCord الحيّة — تُبذَر من الثوابت المُصرَّفة (احتياط بلا شبكة، ولا وميض عند
+// الإقلاع) ثمّ تُستبدَل وقت التشغيل من SaudiCord-Bored/team.json عبر BadgeAPI، فتُمنَح
 // الرتب وتُسحَب بلا إعادة بناء — نفس فكرة ملفّات الشارات الأخرى.
-type TierSets = Record<EsharqTier, Set<string>>;
+type TierSets = Record<SaudiCordTier, Set<string>>;
 
 function seedTiers(): TierSets {
     return Object.fromEntries(
-        ESHARQ_TIERS.map(tier => [tier, new Set(EsharqTeamSeed[tier])])
+        ESHARQ_TIERS.map(tier => [tier, new Set(SaudiCordTeamSeed[tier])])
     ) as TierSets;
 }
 
-let liveEsharqTiers: TierSets = seedTiers();
+let liveSaudiCordTiers: TierSets = seedTiers();
 
 // يُستدعى من BadgeAPI بعد جلب team.json. ملفّ مفقود أو تالف أو فارغ تماماً يعود
 // بالبذرة المُصرَّفة، فلا يمحو ملفٌّ سيّئ شارات الفريق. أمّا رتبةٌ غائبة من ملفٍّ
 // صالح فتعني «لا أحد فيها» فعلاً — وهذه هي طريقة السحب.
-export function setEsharqTeam(team: Partial<Record<EsharqTier, unknown>> | null | undefined) {
+export function setSaudiCordTeam(team: Partial<Record<SaudiCordTier, unknown>> | null | undefined) {
     if (!team || typeof team !== "object") {
-        liveEsharqTiers = seedTiers();
+        liveSaudiCordTiers = seedTiers();
         return;
     }
     const next = Object.fromEntries(ESHARQ_TIERS.map(tier => {
@@ -113,19 +113,19 @@ export function setEsharqTeam(team: Partial<Record<EsharqTier, unknown>> | null 
 
     // ملفّ لا يحمل أيّ رتبة معروفة = تالف، لا «فريق فارغ».
     const total = ESHARQ_TIERS.reduce((n, tier) => n + next[tier].size, 0);
-    liveEsharqTiers = total ? next : seedTiers();
+    liveSaudiCordTiers = total ? next : seedTiers();
 }
 
-export const esharqTierOf = (id: string): EsharqTier | null =>
-    ESHARQ_TIERS.find(tier => liveEsharqTiers[tier].has(id)) ?? null;
+export const esharqTierOf = (id: string): SaudiCordTier | null =>
+    ESHARQ_TIERS.find(tier => liveSaudiCordTiers[tier].has(id)) ?? null;
 
-export const hasEsharqTier = (id: string, tier: EsharqTier) => liveEsharqTiers[tier].has(id);
+export const hasSaudiCordTier = (id: string, tier: SaudiCordTier) => liveSaudiCordTiers[tier].has(id);
 
-/** المالك والمدراء — هؤلاء «فريق إشراق». */
-export const isEsharqTeam = (id: string) => hasEsharqTier(id, "owner") || hasEsharqTier(id, "admin");
+/** المالك والمدراء — هؤلاء «فريق SaudiCord». */
+export const isSaudiCordTeam = (id: string) => hasSaudiCordTier(id, "owner") || hasSaudiCordTier(id, "admin");
 
-/** شارة «مستخدم إشراق» تلقائية لكلّ من له مدخل عامّ في أي رتبة. */
-export const isEsharqUser = (id: string) => esharqTierOf(id) !== null;
+/** شارة «مستخدم SaudiCord» تلقائية لكلّ من له مدخل عامّ في أي رتبة. */
+export const isSaudiCordUser = (id: string) => esharqTierOf(id) !== null;
 
 export const isAnyPluginDev = (id: string) => Object.hasOwn(VencordDevsById, id) || Object.hasOwn(EquicordDevsById, id);
 
