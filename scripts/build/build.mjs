@@ -252,11 +252,11 @@ await buildOrWatchAll(buildConfigs);
 
 await Promise.all([
     writeFile("dist/desktop/package.json", JSON.stringify({
-        name: "esharq",
+        name: "saudicord",
         main: "patcher.js"
     })),
     writeFile("dist/equibop/package.json", JSON.stringify({
-        name: "esharq",
+        name: "saudicord",
         main: "main.js"
     }))
 ]);
