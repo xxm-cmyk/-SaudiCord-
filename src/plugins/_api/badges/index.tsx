@@ -52,11 +52,11 @@ const ESHARQ_BADGES = "https://raw.githubusercontent.com/LOSTSTR/Esharq-Bored/ma
  * فهي علامة الانتماء لا مرتبة فوق غيرها.
  */
 const ESHARQ_TIER_META = {
-    owner: { img: "owner/owner.png", label: "مالك إشراق · Esharq Owner" },
-    admin: { img: "admin/admin.png", label: "مدير إشراق · Esharq Admin" },
-    tester: { img: "tester/tester.png", label: "مُختبِر إشراق · Esharq Tester" },
-    supporter: { img: "supporter/supporter.png", label: "داعم إشراق · Esharq Supporter" },
-    user: { img: "user/user.png", label: "مستخدم إشراق · Esharq User" },
+    owner: { img: "owner/owner.png", label: "مالك SaudiCord · SaudiCord Owner" },
+    admin: { img: "admin/admin.png", label: "مدير SaudiCord · SaudiCord Admin" },
+    tester: { img: "tester/tester.png", label: "مُختبِر SaudiCord · SaudiCord Tester" },
+    supporter: { img: "supporter/supporter.png", label: "داعم SaudiCord · SaudiCord Supporter" },
+    user: { img: "user/user.png", label: "مستخدم SaudiCord · SaudiCord User" },
 } as const;
 
 const tierIcon = (tier: keyof typeof ESHARQ_TIER_META) => tier === "user" ? SAUDICORD_LOGO : ESHARQ_BADGES + ESHARQ_TIER_META[tier].img;
@@ -69,7 +69,7 @@ const EsharqTierBadge: ProfileBadge = {
     // اسمٌ عامّ لا تفصيليّ: الشارة مكوّن، والمكوّن يعرف الرتبة فيُظهر اسمها
     // الدقيق في تلميحه. أمّا هذا الحقل فيقرؤه ديسكورد وصفحة «ملفّي» في إعدادات
     // إشراق، وكان فارغاً — فكانت الشارة تغيب عن تلك الصفحة كلّياً.
-    description: "رتبة إشراق · Esharq Rank",
+    description: "رتبة SaudiCord · SaudiCord Rank",
     position: BadgePosition.START,
     shouldShow: ({ userId }) => esharqTierOf(userId) !== null && badgeVisible(userId, "tier", "profile"),
     component: ({ userId }: BadgeUserArgs) => {
@@ -207,7 +207,7 @@ const EsharqCustomChatBadge = ({ userId }: { userId: string; }) => {
 // gives the className back, which is what makes a per-member effect possible at all.
 const EsharqSelfServeBadge: ProfileBadge = {
     id: "esharq_selfserve_badge",
-    description: "داعم إشراق · Esharq Supporter",
+    description: "داعم SaudiCord · SaudiCord Supporter",
     position: BadgePosition.START,
     shouldShow: ({ userId }) => selfServeVisible(userId, "profile"),
     component: ({ userId }: ProfileBadge & BadgeUserArgs) => {
