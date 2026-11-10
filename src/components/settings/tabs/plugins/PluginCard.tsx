@@ -34,7 +34,7 @@ interface PluginCardProps extends React.HTMLProps<HTMLDivElement> {
 
 export const FORK_EXCLUSIVE_PLUGINS = new Set([
     "ArabicAutoUpdater",
-    // 🔴 محرّك التعريب من إشراق، لكنه يسكن `src/plugins/_core/` **بالضرورة**:
+    // 🔴 محرّك التعريب من SaudiCord، لكنه يسكن `src/plugins/_core/` **بالضرورة**:
     // يجب أن يُستورَد قبل تطبيق أي رقعة، فمكانه النواة لا `esharqplugins`.
     // ولذلك رآه المكوّن إضافةً من فينكورد فعلّق عليها شارتها — شارة خاطئة
     // على أخصّ ما بنيناه. والانتماء يُعلَن هنا حين لا يدلّ عليه المسار.
@@ -55,7 +55,7 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
     const isEquicordPlugin = folderName.startsWith("src/equicordplugins/");
     const isVencordPlugin = folderName.startsWith("src/plugins/");
     const isUserPlugin = folderName.startsWith("src/userplugins/");
-    // إضافات إشراق نفسها: تحمل الشارة كإضافات الفرع، ولا تُحسب «شخصية».
+    // إضافات SaudiCord نفسها: تحمل الشارة كإضافات الفرع، ولا تُحسب «شخصية».
     const isEsharqPlugin = folderName.startsWith("src/esharqplugins/");
     const isModifiedPlugin = plugin.isModified ?? false;
     const isForkExclusive = FORK_EXCLUSIVE_PLUGINS.has(plugin.name);
@@ -72,7 +72,7 @@ export function PluginCard({ plugin, disabled, onRestartNeeded, onMouseEnter, on
      * النتيجة: بطاقةٌ مُطفأة، وضغطةٌ لا تفعل شيئاً، ولا سطر يقول لماذا.
      * وحتى الإضافات الضرورية تُطفأ هكذا — قِسته.
      *
-     * الآن يُعطَّل المفتاح ويُقال السبب في التلميح، فلا يظنّ صاحبه أنّ إشراق
+     * الآن يُعطَّل المفتاح ويُقال السبب في التلميح، فلا يظنّ صاحبه أنّ SaudiCord
      * تعطّل. وإنهاء الجلسة من صفحة «تنصيف الانهيار».
      */
     const hiddenByBisect = isHiddenByBisect(plugin.name);
