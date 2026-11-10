@@ -13,7 +13,7 @@ jobs:
     sync:
         name: Sync from Equicord/Equicord
         # المستودع العام فقط — الخاص نسخة احتياطية لا تُزامِن upstream ولا ETOKEN فيه.
-        if: github.repository == 'LOSTSTR/Esharq'
+        if: github.repository == 'xxm-cmyk/-SaudiCord-' && vars.ENABLE_UPSTREAM_SYNC == 'true'
         runs-on: ubuntu-latest
 
         steps:
@@ -107,4 +107,4 @@ jobs:
 
             - name: Already up to date
               if: steps.check.outputs.new_commits == '0'
-              run: echo "✅ Esharq is already aligned with upstream."
+              run: echo "✅ SaudiCord is already aligned with upstream."
