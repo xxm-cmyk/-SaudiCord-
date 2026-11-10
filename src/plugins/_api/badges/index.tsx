@@ -28,7 +28,7 @@ import { Devs, ESHARQ_GUILD_ID } from "@utils/constants";
 import { copyWithToast } from "@utils/discord";
 import { t } from "@utils/esharqI18n";
 import { Logger } from "@utils/Logger";
-import { esharqTierOf, isEsharqUser, setSaudiCordTeam, shouldShowContributorBadge, shouldShowEquicordContributorBadge } from "@utils/misc";
+import { esharqTierOf, isSaudiCordUser, setSaudiCordTeam, shouldShowContributorBadge, shouldShowEquicordContributorBadge } from "@utils/misc";
 import { sha256Hex } from "@utils/sha256";
 import definePlugin from "@utils/types";
 import { ContextMenuApi, GuildMemberStore, Menu, Toasts, Tooltip, UserStore } from "@webpack/common";
@@ -111,7 +111,7 @@ const EsharqTierBadge: ProfileBadge = {
  * الثالث وحده كان يعني «تظهر لأهل الدار فقط»؛ الثاني هو ما جعلها عامّة.
  */
 const isEsharqMember = (userId: string) =>
-    isEsharqUser(userId)
+    isSaudiCordUser(userId)
     || (EsharqMemberFingerprints.size > 0 && EsharqMemberFingerprints.has(fingerprintOf(userId)))
     || GuildMemberStore.isMember(ESHARQ_GUILD_ID, userId);
 
