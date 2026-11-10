@@ -29,12 +29,12 @@ export const VENCORD_CONTRIB_ROLE_ID = "1173343399470964856";
 export const EQUIBOT_USER_ID = "1243063117852835941";
 export const KNOWN_ISSUES_CHANNEL_ID = "1466558228379992266";
 
-// Esharq
-// The Esharq Discord application id (also its bot user id). Its /plugin interaction
+// SaudiCord
+// The SaudiCord Discord application id (also its bot user id). Its /plugin interaction
 // responses are augmented client-side with a real, per-viewer plugin toggle card.
 export const ESHARQ_BOT_USER_ID = "1528492372248236183";
 
-// خادم إشراق. تُمنَح شارة «مستخدم إشراق» لكلّ عضو فيه — والعضوية تُقرأ من مخزن
+// خادم SaudiCord. تُمنَح شارة «مستخدم SaudiCord» لكلّ عضو فيه — والعضوية تُقرأ من مخزن
 // ديسكورد المحليّ، فلا تُنشَر قائمة أعضاء ولا تُفعَّل صلاحية مميّزة ولا يُستدعى
 // خادم. الثمن أنّها تظهر لمن هو نفسه في الخادم؛ وهذا يليق بشارة انتماء.
 export const ESHARQ_GUILD_ID = "1211352550583042058";
@@ -1467,12 +1467,12 @@ export const EquicordDevs = Object.freeze({
     },
 } satisfies Record<string, Dev>);
 
-// بذور رتب إشراق — احتياطٌ مُصرَّف يعمل بلا شبكة وبلا وميض عند الإقلاع.
-// المصدر الحيّ هو Esharq-Bored/team.json، ويطغى على هذه القيم بلا إعادة بناء.
+// بذور رتب SaudiCord — احتياطٌ مُصرَّف يعمل بلا شبكة وبلا وميض عند الإقلاع.
+// المصدر الحيّ هو SaudiCord-Bored/team.json، ويطغى على هذه القيم بلا إعادة بناء.
 export const ESHARQ_TIERS = ["owner", "admin", "tester", "supporter"] as const;
-export type EsharqTier = typeof ESHARQ_TIERS[number];
+export type SaudiCordTier = typeof ESHARQ_TIERS[number];
 
-export const EsharqTeamSeed: Readonly<Record<EsharqTier, readonly string[]>> = Object.freeze({
+export const SaudiCordTeamSeed: Readonly<Record<SaudiCordTier, readonly string[]>> = Object.freeze({
     owner: ["681465758127226900"],
     admin: [
         "1072961475125182564",
