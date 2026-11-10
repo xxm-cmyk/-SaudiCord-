@@ -12,9 +12,9 @@ permissions:
 
 jobs:
     Build:
-        name: Build Equicord
+        name: Build SaudiCord
         # المستودع العام فقط — الخاص نسخة احتياطية لا تبني يومياً.
-        if: github.repository == 'LOSTSTR/Esharq'
+        if: github.repository == 'xxm-cmyk/-SaudiCord-' && vars.BUILD_NIXOS == 'true'
         runs-on: ubuntu-latest
 
         steps:
@@ -65,7 +65,7 @@ jobs:
               id: date
               run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
 
-            - name: Upload Equicord Stable
+            - name: Upload SaudiCord Stable
               if: ${{ vars.ACT == 'false' }}
               run: |
                   gh release create ${{ steps.date.outputs.date }} --latest=false
