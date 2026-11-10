@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     # Extra guard: only run on the real main branch, never on forks or PRs
-    if: github.repository == 'LOSTSTR/Esharq' && github.ref == 'refs/heads/main'
+    if: github.repository == 'xxm-cmyk/-SaudiCord-' && vars.DISCORD_NOTIFICATIONS == 'true' && github.ref == 'refs/heads/main'
 
     steps:
       - name: Checkout (full history for the push range diff)
