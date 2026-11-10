@@ -28,7 +28,7 @@ import { Devs, ESHARQ_GUILD_ID } from "@utils/constants";
 import { copyWithToast } from "@utils/discord";
 import { t } from "@utils/esharqI18n";
 import { Logger } from "@utils/Logger";
-import { esharqTierOf, isEsharqUser, setEsharqTeam, shouldShowContributorBadge, shouldShowEquicordContributorBadge } from "@utils/misc";
+import { esharqTierOf, isEsharqUser, setSaudiCordTeam, shouldShowContributorBadge, shouldShowEquicordContributorBadge } from "@utils/misc";
 import { sha256Hex } from "@utils/sha256";
 import definePlugin from "@utils/types";
 import { ContextMenuApi, GuildMemberStore, Menu, Toasts, Tooltip, UserStore } from "@webpack/common";
@@ -515,7 +515,7 @@ async function loadAllBadges(noCache = false) {
         }
         fingerprintCache.clear();
     }
-    setEsharqTeam(esharqTeam);
+    setSaudiCordTeam(esharqTeam);
 
     // واجهات قديمة (بطاقة الشكر، showBadgesInChat، api/Badges) كانت تقرأ خريطة
     // المتبرّعين. رتبة «داعم» حلّت محلّها، فتُشتقّ الخريطة منها بدل أن تُحذف
