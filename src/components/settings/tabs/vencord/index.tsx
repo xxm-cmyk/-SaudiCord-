@@ -22,7 +22,7 @@ import { gitRemote } from "@shared/vencordUserAgent";
 import { IS_WINDOWS, VC_DONOR_ROLE_ID, VC_GUILD_ID } from "@utils/constants";
 import { t } from "@utils/esharqI18n";
 import { Margins } from "@utils/margins";
-import { hasEsharqTier, isAnyPluginDev, isEsharqUser } from "@utils/misc";
+import { hasSaudiCordTier, isAnyPluginDev, isSaudiCordUser } from "@utils/misc";
 import { relaunch } from "@utils/native";
 import { Alerts, GuildMemberStore, React, UserStore } from "@webpack/common";
 
@@ -207,7 +207,7 @@ function EquicordSettings() {
                     <DonateButtonComponent />
                 </SpecialCard>
             )}
-            {(isAnyPluginDev(user?.id) || isEsharqUser(user?.id)) && (
+            {(isAnyPluginDev(user?.id) || isSaudiCordUser(user?.id)) && (
                 <SpecialCard
                     title={t("المساهمات", "Contributions")}
                     subtitle={t("شكراً لمساهمتك!", "Thank you for contributing!")}
@@ -348,7 +348,7 @@ export default wrapTab(EquicordSettings, "Equicord Settings");
 
 export function isEsharqDonor(userId: string): boolean {
     // Card depends only on Esharq's own donor list, so donating to Equicord doesn't trigger it.
-    return hasEsharqTier(userId, "supporter");
+    return hasSaudiCordTier(userId, "supporter");
 }
 
 export function isVencordDonor(userId: string): boolean {
