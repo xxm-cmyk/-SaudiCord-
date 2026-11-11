@@ -28,7 +28,7 @@ import { Devs, SAUDICORD_GUILD_ID } from "@utils/constants";
 import { copyWithToast } from "@utils/discord";
 import { t } from "@utils/esharqI18n";
 import { Logger } from "@utils/Logger";
-import { esharqTierOf, isSaudiCordUser, setSaudiCordTeam, shouldShowContributorBadge, shouldShowEquicordContributorBadge } from "@utils/misc";
+import { esharqTierOf, setSaudiCordTeam, shouldShowContributorBadge, shouldShowEquicordContributorBadge } from "@utils/misc";
 import definePlugin from "@utils/types";
 import { ContextMenuApi, GuildMemberStore, Menu, Toasts, Tooltip, UserStore } from "@webpack/common";
 
@@ -41,7 +41,7 @@ import { EquicordDonorModal, EquicordTranslatorModal, VencordDonorModal } from "
 const CONTRIBUTOR_BADGE = "https://cdn.discordapp.com/emojis/1092089799109775453.png?size=64";
 const EQUICORD_CONTRIBUTOR_BADGE = "https://equicord.org/assets/favicon.png";
 const USERPLUGIN_CONTRIBUTOR_BADGE = "https://equicord.org/assets/icons/misc/userplugin.png";
-const ESHARQ_BADGES = "https://raw.githubusercontent.com/LOSTSTR/Esharq-Bored/main/badges/";
+const SAUDICORD_BADGES = "https://raw.githubusercontent.com/xxm-cmyk/SaudiCord-Bored/main/badges/";
 
 /**
  * رتب إشراق. الصورة والاسم لكلّ رتبة في مكان واحد، فإضافة رتبة لاحقاً سطرٌ هنا
@@ -50,15 +50,18 @@ const ESHARQ_BADGES = "https://raw.githubusercontent.com/LOSTSTR/Esharq-Bored/ma
  * «مستخدم» ليست رتبة تُمنَح: تظهر تلقائياً لكلّ من له مدخل عامّ في أيّ رتبة،
  * فهي علامة الانتماء لا مرتبة فوق غيرها.
  */
-const ESHARQ_TIER_META = {
-    owner: { img: "owner/owner.png", label: "مالك SaudiCord · SaudiCord Owner" },
+const SAUDICORD_TIER_META = {
+    owner: { img: "Owner/owner.png", label: "مالك SaudiCord · SaudiCord Owner" },
     admin: { img: "admin/admin.png", label: "مدير SaudiCord · SaudiCord Admin" },
-    tester: { img: "tester/tester.png", label: "مُختبِر SaudiCord · SaudiCord Tester" },
-    supporter: { img: "supporter/supporter.png", label: "داعم SaudiCord · SaudiCord Supporter" },
     user: { img: "user/user.png", label: "مستخدم SaudiCord · SaudiCord User" },
 } as const;
 
-const tierIcon = (tier: keyof typeof ESHARQ_TIER_META) => tier === "user" ? SAUDICORD_LOGO : ESHARQ_BADGES + ESHARQ_TIER_META[tier].img;
+const tierIcon = (tier: keyof typeof SAUDICORD_TIER_META) =>
+    SAUDICORD_BADGES + SAUDICORD_TIER_META[tier].img;
+
+type SaudiCordHighlight = { ar: string; en: string; };
+let SaudiCordHighlights = {} as Record<string, SaudiCordHighlight>;
+
 
 // شارة الرتبة الممنوحة (واحدة لكلّ عضو — أعلى رتبة يملكها). الصقل البصريّ
 // (قصّ دائريّ، حلقة، تكبير عند المرور) في esharqBadges.css عبر aria-label،
@@ -74,7 +77,7 @@ const EsharqTierBadge: ProfileBadge = {
     component: ({ userId }: BadgeUserArgs) => {
         const tier = esharqTierOf(userId);
         if (!tier) return null;
-        const meta = ESHARQ_TIER_META[tier];
+        const meta = SAUDICORD_TIER_META[tier];
         return (
             <Tooltip text={meta.label}>
                 {({ onMouseEnter, onMouseLeave }) => (
@@ -109,16 +112,36 @@ const EsharqTierBadge: ProfileBadge = {
  *
  * الثالث وحده كان يعني «تظهر لأهل الدار فقط»؛ الثاني هو ما جعلها عامّة.
  */
-const isEsharqMember = (userId: string) =>
-    isSaudiCordUser(userId)
-    || GuildMemberStore.isMember(SAUDICORD_GUILD_ID, userId);
+const isSaudiCordMember = (userId: string) => GuildMemberStore.isMember(SAUDICORD_GUILD_ID, userId);
+
+const SaudiCordHighlightBadge: ProfileBadge = {
+    id: "saudicord_highlight_badge",
+    description: "تميّز SaudiCord · SaudiCord Highlight",
+    position: BadgePosition.START,
+    shouldShow: ({ userId }) => Boolean(SaudiCordHighlights[userId]) && badgeVisible(userId, "user", "profile"),
+    component: ({ userId }: BadgeUserArgs) => {
+        const highlight = SaudiCordHighlights[userId];
+        if (!highlight) return null;
+        const label = t(highlight.ar, highlight.en);
+        return (
+            <Tooltip text={label}>
+                {({ onMouseEnter, onMouseLeave }) => (
+                    <span className="esharq-highlight-badge" role="img" aria-label={label}
+                        onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
+                        <img src={SAUDICORD_BADGES + "Highlight/highlight.png"} alt="" />
+                    </span>
+                )}
+            </Tooltip>
+        );
+    },
+};
 
 const EsharqUserBadge: ProfileBadge = {
     id: "esharq_user_badge",
-    description: ESHARQ_TIER_META.user.label,
+    description: SAUDICORD_TIER_META.user.label,
     iconSrc: tierIcon("user"),
     position: BadgePosition.START,
-    shouldShow: ({ userId }) => isEsharqMember(userId) && badgeVisible(userId, "user", "profile"),
+    shouldShow: ({ userId }) => isSaudiCordMember(userId) && badgeVisible(userId, "user", "profile"),
     onClick: (_, { userId }) => openContributorModal(UserStore.getUser(userId)),
 };
 
@@ -126,7 +149,7 @@ const EsharqUserBadge: ProfileBadge = {
 const EsharqTierChatBadge = ({ userId }: { userId: string; }) => {
     const tier = esharqTierOf(userId);
     if (!tier) return null;
-    const meta = ESHARQ_TIER_META[tier];
+    const meta = SAUDICORD_TIER_META[tier];
     return (
         <span className="esharq-tier-chat-badge" data-tier={tier} role="img" aria-label={meta.label}>
             <img src={tierIcon(tier)} alt="" />
@@ -386,7 +409,7 @@ interface SelfServeEntry {
 export function getEsharqEntitlements(userId: string) {
     return {
         tier: esharqTierOf(userId) !== null,
-        user: isEsharqMember(userId),
+        user: isSaudiCordMember(userId),
         custom: userId in EsharqCustomBadges,
         selfserve: getSelfServeBadges(userId).length > 0
     };
@@ -466,38 +489,18 @@ async function loadBadges(url: string, noCache = false) {
 
 async function loadAllBadges(noCache = false) {
     const vencordBadges = await loadBadges("https://badges.vencord.dev/badges.json", noCache);
-    // صور «مخصّص» لكلّ عضو (معرّف ← صورة + نصّ التمرير).
-    const esharqCustom = await loadBadges("https://raw.githubusercontent.com/LOSTSTR/Esharq-Bored/main/badges/custom/custom.json", noCache);
-    // رتب إشراق. تُمنَح وتُسحَب بتحرير team.json وحده — بلا إعادة بناء.
-    // معزولة بـcatch حتى لا يُسقِط ملفٌّ مفقود أو تالف بقيّة الشارات.
-    const esharqTeam = await loadBadges("https://raw.githubusercontent.com/LOSTSTR/Esharq-Bored/main/team.json", noCache).catch(() => null);
-    // الشارة الذاتية للداعمين. معزولة بـcatch لأنّ الملفّ لا يوجد قبل أوّل موافقة —
-    // و404 يجب ألّا يُعطّل بقيّة المجموعات.
-    const esharqSelfServe = await loadBadges("https://raw.githubusercontent.com/LOSTSTR/Esharq-Bored/main/badges/selfserve.json", noCache).catch(() => null);
-    // تفضيلات الإظهار. معزولة بـcatch: الملفّ لا يوجد حتى يُغيّر أوّل عضو شيئاً،
-    // وغيابه يعني «الكلّ ظاهر» وهو الافتراض الصحيح.
-    const esharqVisibility = await loadBadges("https://raw.githubusercontent.com/LOSTSTR/Esharq-Bored/main/badges/visibility.json", noCache).catch(() => null);
+    // SaudiCord team data: owner/admin arrays + highlight map keyed by Discord user ID.
+    const team = await loadBadges("https://raw.githubusercontent.com/xxm-cmyk/SaudiCord-Bored/main/team.json", noCache).catch(() => null);
 
     DonorBadges = vencordBadges;
-    EsharqCustomBadges = esharqCustom;
-    EsharqSelfServeBadges = esharqSelfServe ?? {};
-    EsharqVisibility = (esharqVisibility && typeof esharqVisibility === "object") ? esharqVisibility as typeof EsharqVisibility : {};
-    setSaudiCordTeam(esharqTeam);
-
-    // واجهات قديمة (بطاقة الشكر، showBadgesInChat، api/Badges) كانت تقرأ خريطة
-    // المتبرّعين. رتبة «داعم» حلّت محلّها، فتُشتقّ الخريطة منها بدل أن تُحذف
-    // فتختفي الميزة صامتةً. صورة العضو المخصّصة تسبق صورة الرتبة إن وُجدت.
-    const supporterIds: string[] = Array.isArray(esharqTeam?.supporter) ? esharqTeam.supporter : [];
-    const supporters: Record<string, Array<Record<"tooltip" | "badge", string>>> = {};
-    for (const id of supporterIds) {
-        if (typeof id !== "string") continue;
-        const own = EsharqCustomBadges[id];
-        supporters[id] = [{
-            tooltip: own?.tooltip || ESHARQ_TIER_META.supporter.label,
-            badge: own?.image || tierIcon("supporter")
-        }];
-    }
-    EsharqDonorBadges = supporters;
+    EsharqCustomBadges = {};
+    EsharqSelfServeBadges = {};
+    EsharqVisibility = {};
+    setSaudiCordTeam(team);
+    SaudiCordHighlights = team?.highlight && typeof team.highlight === "object"
+        ? team.highlight as Record<string, SaudiCordHighlight>
+        : {};
+    EsharqDonorBadges = {};
     // 🔴 **لا تُطعَم `EquicordDonorBadges`**: `api/Badges.ts` يرسمها شارةَ ملفٍّ
     // بنفسها (`getEquicordDonorBadges`)، فوضع داعمينا فيها يرسم صورة الرتبة
     // مرّةً ثانيةً بجوار شارة الرتبة — شارتان متطابقتان لكلّ داعم. رُئي على
@@ -602,7 +605,7 @@ export default definePlugin({
     // 🔴 القائمة **بعكس ترتيب العرض**: كل شارة START تُدسّ في الأوّل، فآخر ما
     // هنا يظهر أوّلاً. المطلوب: شارات إشراق (الرتبة ثمّ المستخدم) قبل الصور
     // التي يختارها الأعضاء (المخصّصة ثمّ الذاتية).
-    userProfileBadges: [UserPluginContributorBadge, EquicordContributorBadge, ContributorBadge, EsharqSelfServeBadge, EsharqCustomBadge, EsharqUserBadge, EsharqTierBadge],
+    userProfileBadges: [UserPluginContributorBadge, EquicordContributorBadge, ContributorBadge, SaudiCordHighlightBadge, EsharqUserBadge, EsharqTierBadge],
 
     async start() {
         // يلتقط الرابط الموقَّع من ردّ /badge حتى يعمل التحكّم العامّ من داخل
