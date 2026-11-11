@@ -196,10 +196,10 @@ function EquicordSettings() {
                 </SpecialCard>
             ) : (
                 <SpecialCard
-                    title={t("ادعم المشروع", "Support the Project")}
+                    title={t("مجتمع سعودي كورد", "SaudiCord Community")}
                     description={t(
-                        "يسعدنا دعمك لتطوير سعودي كورد من خلال التبرع!",
-                        "Support SaudiCord development by donating!"
+                        "انضم إلى مجتمع سعودي كورد وتابع التحديثات واطلب المساعدة.",
+                        "Join the SaudiCord community for updates and support."
                     )}
                     cardImage={ESHARQ_LOGO}
                     backgroundColor="#c3a3ce"
