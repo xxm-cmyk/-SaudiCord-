@@ -72,103 +72,73 @@ export function Newer(props: CommonProps) {
 }
 
 export function Updatable(props: CommonProps) {
-    const [updates, setUpdates] = useState(changes);
-    const [isChecking, setIsChecking] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false);
 
-    const isOutdated = (updates?.length ?? 0) > 0;
-
     return (
-        <>
-            <Flex className={Margins.bottom8} gap="8px">
-                <Button
-                    disabled={isUpdating || isChecking}
-                    onClick={runWithDispatch(setIsChecking, async () => {
+        <Flex flexDirection="column" gap="0.75em">
+            <Button
+                variant="primary"
+                disabled={isUpdating}
+                onClick={runWithDispatch(setIsUpdating, async () => {
+                    try {
                         const outdated = await checkForUpdates();
 
-                        if (outdated) {
-                            setUpdates(changes);
-                        } else {
-                            setUpdates([]);
-
+                        if (!outdated) {
                             Toasts.show({
-                                message: "No updates found!",
+                                message: t("SaudiCord محدّث بالفعل. أنت على آخر إصدار.", "SaudiCord is already up to date."),
                                 id: Toasts.genId(),
-                                type: Toasts.Type.MESSAGE,
-                                options: {
-                                    position: Toasts.Position.BOTTOM
-                                }
+                                type: Toasts.Type.SUCCESS,
+                                options: { position: Toasts.Position.BOTTOM }
                             });
+                            return;
                         }
-                    })}
-                >
-                    {t("تحقق من التحديثات", "Check for Updates")}
-                </Button>
-                {isOutdated && (
-                    <Button
-                        size="small"
-                        variant="primary"
-                        disabled={isUpdating || isChecking}
-                        onClick={runWithDispatch(setIsUpdating, async () => {
-                            const didUpdate = await update();
-                            if (didUpdate) {
-                                setUpdates([]);
 
-                                await new Promise<void>(r => {
-                                    openModal(props => (
-                                        <ConfirmModal
-                                            {...props}
-                                            title={t("تم التحديث بنجاح!", "Update Successful!")}
-                                            subtitle={t("تم التحديث بنجاح. هل تريد إعادة التشغيل الآن لتطبيق التغييرات؟", "Successfully updated. Restart now to apply the changes?")}
-                                            confirmText={t("إعادة تشغيل", "Restart")}
-                                            cancelText={t("ليس الآن", "Not now!")}
-                                            variant="primary"
-                                            onConfirm={() => {
-                                                relaunch();
-                                                r();
-                                            }}
-                                            onCancel={r}
-                                        />
-                                    ));
-                                });
-                            } else {
-                                Toasts.show({
-                                    message: t("فشل التحديث. تحقق من اتصالك وحاول مجدداً.", "Update failed. Check your connection and try again."),
-                                    id: Toasts.genId(),
-                                    type: Toasts.Type.FAILURE,
-                                    options: { position: Toasts.Position.BOTTOM }
-                                });
-                            }
-                        })}
-                    >
-                        {t("حدّث الآن", "Update Now")}
-                    </Button>
-                )}
-            </Flex>
-            {!updates && updateError ? (
-                <>
-                    <Span size="md" weight="medium" color="text-strong">{t("تعذّر التحقّق من التحديثات", "Error checking for updates")}</Span>
-                    <ErrorCard className={Margins.top8} style={{ padding: "1em" }}>
-                        {/* `message` لازمة: أخطاء مُحدِّث HTTP ليس فيها stderr ولا stdout، فكانت
-                              تُعرَض «غير معروف» ونصّها المفيد يُرمى. */}
-                        <p>{updateError.stderr || updateError.stdout || updateError.message
-                            || t("حدث خطأ غير معروف", "An unknown error occurred")}</p>
-                    </ErrorCard>
-                </>
-            ) : isOutdated ? (
-                <>
-                    <Paragraph>
-                        {updates.length === 1
-                            ? t("يتوفّر تحديث واحد. اضغط الزرّ أعلاه لتنزيله وتثبيته.", "There is 1 update available. Click the button above to download and install.")
-                            : t(`تتوفّر ${updates.length} تحديثات. اضغط الزرّ أعلاه لتنزيلها وتثبيتها.`, `There are ${updates.length} updates available. Click the button above to download and install.`)}
-                    </Paragraph>
-                    <Changes updates={updates} {...props} />
-                </>
-            ) : (
-                <Paragraph>
-                    {t("أنت تستخدم أحدث إصدار من Esharq", "You are running the latest version of Esharq")}
-                </Paragraph>
-            )}
-        </>
+                        const didUpdate = await update();
+                        if (!didUpdate) {
+                            Toasts.show({
+                                message: t("لم يتم تطبيق التحديث. حاول مرة أخرى.", "The update could not be applied. Please try again."),
+                                id: Toasts.genId(),
+                                type: Toasts.Type.FAILURE,
+                                options: { position: Toasts.Position.BOTTOM }
+                            });
+                            return;
+                        }
+
+                        await new Promise<void>(resolve => {
+                            openModal(modalProps => (
+                                <ConfirmModal
+                                    {...modalProps}
+                                    title={t("تم تحديث SaudiCord", "SaudiCord updated")}
+                                    subtitle={t("تم تنزيل التحديث وتثبيته. أعد تشغيل Discord لتطبيق التغييرات.", "The update was downloaded and installed. Restart Discord to apply the changes.")}
+                                    confirmText={t("إعادة التشغيل الآن", "Restart now")}
+                                    cancelText={t("لاحقاً", "Later")}
+                                    variant="primary"
+                                    onConfirm={() => {
+                                        relaunch();
+                                        resolve();
+                                    }}
+                                    onCancel={resolve}
+                                />
+                            ));
+                        });
+                    } catch (error) {
+                        Toasts.show({
+                            message: t("فشل التحديث. تحقق من اتصالك وحاول مرة أخرى.", "Update failed. Check your connection and try again."),
+                            id: Toasts.genId(),
+                            type: Toasts.Type.FAILURE,
+                            options: { position: Toasts.Position.BOTTOM }
+                        });
+                        console.error("[SaudiCord] Update failed", error);
+                    }
+                })}
+            >
+                {isUpdating
+                    ? t("جارٍ التحديث…", "Updating…")
+                    : t("تحديث SaudiCord", "Update SaudiCord")}
+            </Button>
+            <Paragraph color="text-subtle">
+                {t("اضغط الزر للتحقق من وجود إصدار جديد وتثبيته مباشرة. ستحتاج إلى إعادة تشغيل Discord لتطبيق التحديث.", "Press the button to check for and install the latest release. Discord must restart to apply the update.")}
+            </Paragraph>
+        </Flex>
     );
 }
