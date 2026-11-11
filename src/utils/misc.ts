@@ -100,7 +100,7 @@ let liveSaudiCordTiers: TierSets = seedTiers();
 // يُستدعى من BadgeAPI بعد جلب team.json. ملفّ مفقود أو تالف أو فارغ تماماً يعود
 // بالبذرة المُصرَّفة، فلا يمحو ملفٌّ سيّئ شارات الفريق. أمّا رتبةٌ غائبة من ملفٍّ
 // صالح فتعني «لا أحد فيها» فعلاً — وهذه هي طريقة السحب.
-export function setSaudiCordTeam(team: Partial<Record<S a u d i C o r d T i e r, unknown>> | null | undefined) {
+export function setSaudiCordTeam(team: Partial<Record<SaudiCordTier, unknown>> | null | undefined) {
     if (!team || typeof team !== "object" || (!Array.isArray(team.owner) && !Array.isArray(team.admin))) {
         liveSaudiCordTiers = seedTiers();
         return;
