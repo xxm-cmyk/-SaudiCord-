@@ -100,20 +100,16 @@ let liveSaudiCordTiers: TierSets = seedTiers();
 // يُستدعى من BadgeAPI بعد جلب team.json. ملفّ مفقود أو تالف أو فارغ تماماً يعود
 // بالبذرة المُصرَّفة، فلا يمحو ملفٌّ سيّئ شارات الفريق. أمّا رتبةٌ غائبة من ملفٍّ
 // صالح فتعني «لا أحد فيها» فعلاً — وهذه هي طريقة السحب.
-export function setSaudiCordTeam(team: Partial<Record<SaudiCordTier, unknown>> | null | undefined) {
-    if (!team || typeof team !== "object") {
+export function setSaudiCordTeam(team: Partial<Record<S a u d i C o r d T i e r, unknown>> | null | undefined) {
+    if (!team || typeof team !== "object" || (!Array.isArray(team.owner) && !Array.isArray(team.admin))) {
         liveSaudiCordTiers = seedTiers();
         return;
     }
-    const next = Object.fromEntries(ESHARQ_TIERS.map(tier => {
+    liveSaudiCordTiers = Object.fromEntries(ESHARQ_TIERS.map(tier => {
         const raw = (team as Record<string, unknown>)[tier];
         const ids = Array.isArray(raw) ? raw.filter((x): x is string => typeof x === "string") : [];
         return [tier, new Set(ids)];
     })) as TierSets;
-
-    // ملفّ لا يحمل أيّ رتبة معروفة = تالف، لا «فريق فارغ».
-    const total = ESHARQ_TIERS.reduce((n, tier) => n + next[tier].size, 0);
-    liveSaudiCordTiers = total ? next : seedTiers();
 }
 
 export const esharqTierOf = (id: string): SaudiCordTier | null =>
