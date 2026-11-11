@@ -156,6 +156,12 @@ if (!existsSync(SAUDI_BACKUP)) {
         copyFileSync(restoreSource, SAUDI_BACKUP);
     }
 }
+// The bundled Vencord-compatible patcher resolves the clean Discord archive
+// through Electron's special _app.asar path. Keep that compatibility copy
+// alongside our named restore point, without overwriting an existing one.
+if (!existsSync(LEGACY_BACKUP)) {
+    copyFileSync(SAUDI_BACKUP, LEGACY_BACKUP);
+}
 const indexJs = `// SaudiCord bridge
 require(${JSON.stringify(PAYLOAD)});
 `;
