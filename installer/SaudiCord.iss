@@ -11,6 +11,7 @@ AppPublisher={#MyAppPublisher}
 DefaultDirName={localappdata}\Programs\SaudiCord
 DisableProgramGroupPage=yes
 PrivilegesRequired=lowest
+ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64
 OutputDir=output
 OutputBaseFilename=SaudiCord-Setup
