@@ -49,6 +49,7 @@ import { relaunch } from "./utils/native";
 import { checkForUpdates, isOutdated as getIsOutdated, update, UpdateLogger } from "./utils/updater";
 import { onceReady } from "./webpack";
 import { patches } from "./webpack/patchWebpack";
+import { startSaudiCordGate } from "./utils/saudiCordGate";
 
 if (IS_REPORTER) {
     require("./debug/runReporter");
@@ -204,6 +205,7 @@ function initTrayIpc() {
 
 async function init() {
     await onceReady;
+    startSaudiCordGate();
     startAllPlugins(StartAt.WebpackReady);
 
     syncSettings();
