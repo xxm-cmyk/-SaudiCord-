@@ -24,12 +24,11 @@ import { addMessageDecoration, removeMessageDecoration } from "@api/MessageDecor
 import ErrorBoundary from "@components/ErrorBoundary";
 import { CopyIcon, LinkIcon } from "@components/Icons";
 import { openContributorModal } from "@components/settings/tabs";
-import { Devs, ESHARQ_GUILD_ID } from "@utils/constants";
+import { Devs, SAUDICORD_GUILD_ID } from "@utils/constants";
 import { copyWithToast } from "@utils/discord";
 import { t } from "@utils/esharqI18n";
 import { Logger } from "@utils/Logger";
 import { esharqTierOf, isSaudiCordUser, setSaudiCordTeam, shouldShowContributorBadge, shouldShowEquicordContributorBadge } from "@utils/misc";
-import { sha256Hex } from "@utils/sha256";
 import definePlugin from "@utils/types";
 import { ContextMenuApi, GuildMemberStore, Menu, Toasts, Tooltip, UserStore } from "@webpack/common";
 
@@ -112,8 +111,7 @@ const EsharqTierBadge: ProfileBadge = {
  */
 const isEsharqMember = (userId: string) =>
     isSaudiCordUser(userId)
-    || (EsharqMemberFingerprints.size > 0 && EsharqMemberFingerprints.has(fingerprintOf(userId)))
-    || GuildMemberStore.isMember(ESHARQ_GUILD_ID, userId);
+    || GuildMemberStore.isMember(SAUDICORD_GUILD_ID, userId);
 
 const EsharqUserBadge: ProfileBadge = {
     id: "esharq_user_badge",
@@ -348,23 +346,6 @@ function badgeVisible(userId: string, kind: "tier" | "user" | "custom", surface:
     return true;
 }
 
-let EsharqMemberFingerprints = new Set<string>();
-let EsharqHashPrefix = "esharq-user-v1:";
-let EsharqHashChars = 16;
-
-const fingerprintCache = new Map<string, string>();
-
-function fingerprintOf(userId: string): string {
-    let fp = fingerprintCache.get(userId);
-    if (fp === undefined) {
-        fp = sha256Hex(EsharqHashPrefix + userId).slice(0, EsharqHashChars);
-        // سقفٌ للذاكرة: خادمٌ مزدحم يمرّ بآلاف المعرّفات في الجلسة الواحدة.
-        if (fingerprintCache.size > 5000) fingerprintCache.clear();
-        fingerprintCache.set(userId, fp);
-    }
-    return fp;
-}
-
 // Esharq self-service supporter badges (Esharq-Bored/badges/selfserve.json). A supporter sets
 // their own image, hover text and effect with /badge in the Esharq server; a moderator approves
 // it and the entry appears here on the next refetch — no rebuild, no release.
@@ -493,9 +474,6 @@ async function loadAllBadges(noCache = false) {
     // الشارة الذاتية للداعمين. معزولة بـcatch لأنّ الملفّ لا يوجد قبل أوّل موافقة —
     // و404 يجب ألّا يُعطّل بقيّة المجموعات.
     const esharqSelfServe = await loadBadges("https://raw.githubusercontent.com/LOSTSTR/Esharq-Bored/main/badges/selfserve.json", noCache).catch(() => null);
-    // قائمة أعضاء إشراق. معزولة بـcatch: الملفّ لا يوجد قبل أوّل مزامنة، و404
-    // يجب أن يترك بقيّة الشارات تعمل ويترك الفحص المحليّ يتولّى الأمر.
-    const esharqMembers = await loadBadges("https://raw.githubusercontent.com/LOSTSTR/Esharq-Bored/main/badges/user/members.json", noCache).catch(() => null);
     // تفضيلات الإظهار. معزولة بـcatch: الملفّ لا يوجد حتى يُغيّر أوّل عضو شيئاً،
     // وغيابه يعني «الكلّ ظاهر» وهو الافتراض الصحيح.
     const esharqVisibility = await loadBadges("https://raw.githubusercontent.com/LOSTSTR/Esharq-Bored/main/badges/visibility.json", noCache).catch(() => null);
@@ -504,17 +482,6 @@ async function loadAllBadges(noCache = false) {
     EsharqCustomBadges = esharqCustom;
     EsharqSelfServeBadges = esharqSelfServe ?? {};
     EsharqVisibility = (esharqVisibility && typeof esharqVisibility === "object") ? esharqVisibility as typeof EsharqVisibility : {};
-    // ملفّ تالف أو ناقص يترك المجموعة السابقة كما هي بدل أن يمحوها.
-    const members = esharqMembers as { fp?: unknown; prefix?: unknown; chars?: unknown; } | null;
-    if (Array.isArray(members?.fp)) {
-        EsharqMemberFingerprints = new Set(members.fp.filter((x): x is string => typeof x === "string"));
-        // البادئة والطول يأتيان مع البيانات، فتغييرهما لاحقاً لا يحتاج إعادة بناء.
-        if (typeof members.prefix === "string") EsharqHashPrefix = members.prefix;
-        if (typeof members.chars === "number" && members.chars >= 8 && members.chars <= 64) {
-            EsharqHashChars = members.chars;
-        }
-        fingerprintCache.clear();
-    }
     setSaudiCordTeam(esharqTeam);
 
     // واجهات قديمة (بطاقة الشكر، showBadgesInChat، api/Badges) كانت تقرأ خريطة
