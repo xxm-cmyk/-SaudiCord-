@@ -162,22 +162,12 @@ if (!IS_VANILLA) {
 
     process.env.DATA_DIR = join(app.getPath("userData"), "..", "Equicord");
 
-    // 🔴 أعلاه كانت أعلامٌ تمنع تخميل المُصيَّر في الخلفية، حذفها المنبع في
-    // `7764f2512` بعلّةٍ صريحة: العطل الذي وُضعت له زال، وديسكورد نفسه صار
-    // يضيفها. وأُتبع المنبع هنا لئلّا نحمل حلّاً لمشكلةٍ لم تعد قائمة —
-    // وكتلةُ تسريع العتاد أدناه لنا، فتبقى.
-    if (settings.hardwareVideoAcceleration) {
-        // GPU-accelerated video decode/encode for smoother video calls, screen sharing, and embeds.
-        // Decode: offloads H.264/VP9/AV1 from CPU to GPU decoder unit (DXVA2/D3D11VA on Windows, VAAPI on Linux).
-        // Encode: offloads outbound screen-share and camera streams to GPU encoder (NVENC/Quick Sync/AMF).
-        // Zero-copy: transfers decoded frames directly to the compositor without a CPU round-trip.
-        // Platform-specific: VaapiVideoDecoder is a no-op on Windows/macOS, harmless to include.
-        const features = ["AcceleratedVideoDecoder", "AcceleratedVideoEncoder"];
-        if (process.platform === "linux") features.push("VaapiVideoDecoder", "VaapiVideoEncoder");
-        app.commandLine.appendSwitch("enable-features", features.join(","));
-        app.commandLine.appendSwitch("enable-accelerated-video-decode");
-        app.commandLine.appendSwitch("enable-gpu-rasterization");
-        app.commandLine.appendSwitch("enable-zero-copy");
+    // Let Chromium/Electron choose supported GPU paths automatically.
+    // Forcing experimental rasterization and zero-copy flags here can produce
+    // a blank renderer on older Windows GPUs and drivers. Only disable GPU
+    // acceleration when the user explicitly turns the setting off.
+    if (!settings.hardwareVideoAcceleration) {
+        app.disableHardwareAcceleration();
     }
 } else {
     console.log("[Equicord] Running in vanilla mode. Not loading Equicord");
