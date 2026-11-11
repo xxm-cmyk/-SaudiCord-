@@ -31,8 +31,33 @@ Source: "payload\saudicord.asar"; DestDir: "{app}"; Flags: ignoreversion
 [Icons]
 Name: "{autoprograms}\SaudiCord\إزالة SaudiCord"; Filename: "{uninstallexe}"
 
-[Run]
-Filename: "{app}\node.exe"; Parameters: """{app}\install.mjs"" --branch stable"; Flags: runhidden waituntilterminated postinstall; StatusMsg: "جارٍ تثبيت SaudiCord على Discord..."
+[Code]
+procedure CurStepChanged(CurStep: TSetupStep);
+var
+    ResultCode: Integer;
+begin
+    if CurStep = ssPostInstall then begin
+        if not Exec(ExpandConstant('{app}\node.exe'),
+            '"' + ExpandConstant('{app}\install.mjs') + '" --branch stable',
+            ExpandConstant('{app}'), SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+            RaiseException('تعذّر تشغيل مثبّت SaudiCord.');
+        if ResultCode <> 0 then
+            RaiseException('فشل تثبيت SaudiCord. أغلق Discord بالكامل ثم أعد تشغيل ملف التثبيت.');
+        MsgBox('تم تثبيت SaudiCord بنجاح. أعد تشغيل Discord لتطبيق التغييرات.', mbInformation, MB_OK);
+    end;
+end;
 
-[UninstallRun]
-Filename: "{app}\node.exe"; Parameters: """{app}\install.mjs"" --uninstall --branch stable"; Flags: runhidden waituntilterminated; RunOnceId: "SaudiCordRestoreDiscord"
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+var
+    ResultCode: Integer;
+begin
+    if CurUninstallStep = usUninstall then begin
+        if not Exec(ExpandConstant('{app}\node.exe'),
+            '"' + ExpandConstant('{app}\install.mjs') + '" --uninstall --branch stable',
+            ExpandConstant('{app}'), SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+            RaiseException('تعذّر تشغيل أداة استعادة Discord. لم تتم إزالة ملفات SaudiCord.');
+        if ResultCode <> 0 then
+            RaiseException('تعذّرت استعادة Discord. أغلق Discord ثم أعد محاولة إزالة SaudiCord.');
+        MsgBox('تمت إزالة SaudiCord واستعادة Discord الأصلي.', mbInformation, MB_OK);
+    end;
+end;
