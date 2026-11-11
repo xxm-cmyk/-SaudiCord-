@@ -37,7 +37,7 @@ export const ESHARQ_BOT_USER_ID = "1528492372248236183";
 // خادم SaudiCord. تُمنَح شارة «مستخدم SaudiCord» لكلّ عضو فيه — والعضوية تُقرأ من مخزن
 // ديسكورد المحليّ، فلا تُنشَر قائمة أعضاء ولا تُفعَّل صلاحية مميّزة ولا يُستدعى
 // خادم. الثمن أنّها تظهر لمن هو نفسه في الخادم؛ وهذا يليق بشارة انتماء.
-export const SAUDICORD_GUILD_ID = "1211352550583042058";
+export const SAUDICORD_GUILD_ID = "1227317859600830605";
 
 // Vencord
 export const VC_SUPPORT_CHANNEL_ID = "1026515880080842772";
