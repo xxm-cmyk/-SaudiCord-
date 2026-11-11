@@ -1,5 +1,5 @@
 #define MyAppName "SaudiCord"
-#define MyAppVersion "1.15.6.0"
+#define MyAppVersion "1.15.6.1"
 #define MyAppPublisher "SaudiCord"
 #define MyAppExeName "node.exe"
 
@@ -40,10 +40,10 @@ begin
     if CurStep = ssPostInstall then begin
         if not Exec(ExpandConstant('{app}\node.exe'),
             '"' + ExpandConstant('{app}\install.mjs') + '" --branch stable',
-            ExpandConstant('{app}'), SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+            ExpandConstant('{app}'), SW_SHOW, ewWaitUntilTerminated, ResultCode) then
             RaiseException('تعذّر تشغيل مثبّت SaudiCord.');
         if ResultCode <> 0 then
-            RaiseException('فشل تثبيت SaudiCord. أغلق Discord بالكامل ثم أعد تشغيل ملف التثبيت.');
+            RaiseException('فشل تثبيت SaudiCord. راجع سجل التثبيت في %APPDATA%\SaudiCord\installer.log، أو أعد المحاولة بعد إغلاق Discord من إدارة المهام.');
         MsgBox('تم تثبيت SaudiCord بنجاح. أعد تشغيل Discord لتطبيق التغييرات.', mbInformation, MB_OK);
     end;
 end;
@@ -55,10 +55,10 @@ begin
     if CurUninstallStep = usUninstall then begin
         if not Exec(ExpandConstant('{app}\node.exe'),
             '"' + ExpandConstant('{app}\install.mjs') + '" --uninstall --branch stable',
-            ExpandConstant('{app}'), SW_HIDE, ewWaitUntilTerminated, ResultCode) then
+            ExpandConstant('{app}'), SW_SHOW, ewWaitUntilTerminated, ResultCode) then
             RaiseException('تعذّر تشغيل أداة استعادة Discord. لم تتم إزالة ملفات SaudiCord.');
         if ResultCode <> 0 then
-            RaiseException('تعذّرت استعادة Discord. أغلق Discord ثم أعد محاولة إزالة SaudiCord.');
+            RaiseException('تعذّرت استعادة Discord. راجع سجل التثبيت داخل %APPDATA%\SaudiCord\installer.log.');
         MsgBox('تمت إزالة SaudiCord واستعادة Discord الأصلي.', mbInformation, MB_OK);
     end;
 end;
