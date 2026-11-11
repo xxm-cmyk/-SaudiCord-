@@ -8,7 +8,8 @@ import { applyArabicRelativeTime } from "@utils/arabicRelativeTime";
 import { EquicordDevs } from "@utils/constants";
 import {
     ARABIC_TABLE_GLOBAL, type ArabicMessageTable, installArabicTable,
-    MESSAGE_LOADER_ANCHOR, MESSAGE_LOADER_PATTERN,
+    ENABLE_ARABIC_PATTERN, ENABLE_ARABIC_REPLACEMENT,
+    LANGUAGE_TABLE_ANCHOR, MESSAGE_LOADER_ANCHOR, MESSAGE_LOADER_PATTERN,
     MESSAGE_LOADER_REPLACEMENT } from "@utils/esharqLocale";
 import { readGregorianDates } from "@utils/esharqPrefs";
 import { forceGregorianForArabic } from "@utils/gregorianCalendar";
@@ -66,10 +67,18 @@ export default definePlugin({
     required: true,
 
     patches: [
-        // 🔴 **جدول لغات ديسكورد لا يُمَسّ** — قرار المالك: العربية إضافتنا،
-        // فمكانها صفحة «الأدوات ← اللغة» عندنا لا قائمة لغات ديسكورد الرسمية.
-        // ولذلك لا نقلب `enabled:false → true` هناك؛ يبقى المُدخل مُعطَّلاً في
-        // قائمته، ونحن نضبط اللغة من صفحتنا مباشرةً.
+        // إتاحة العربية في جدول لغات ديسكورد؛ تبقى صفحة SaudiCord هي
+        // نقطة الاختيار، لكن يجب أن تكون اللغة مفعّلة داخلياً كي يقبلها
+        // محرك الترجمة ولا يسقط إلى en-US.
+        {
+            find: LANGUAGE_TABLE_ANCHOR,
+            all: true,
+            noWarn: true,
+            replacement: {
+                match: ENABLE_ARABIC_PATTERN,
+                replace: ENABLE_ARABIC_REPLACEMENT
+            }
+        },
         {
             // محمّل الرسائل: نُلحق `ar` يُرجع جدولنا من الذاكرة بلا شبكة.
             // المرساة **نهاية الخريطة** لا بدايتها (البداية تطابق جزءاً
