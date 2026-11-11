@@ -1469,33 +1469,12 @@ export const EquicordDevs = Object.freeze({
 
 // بذور رتب SaudiCord — احتياطٌ مُصرَّف يعمل بلا شبكة وبلا وميض عند الإقلاع.
 // المصدر الحيّ هو SaudiCord-Bored/team.json، ويطغى على هذه القيم بلا إعادة بناء.
-export const ESHARQ_TIERS = ["owner", "admin", "tester", "supporter"] as const;
+export const ESHARQ_TIERS = ["owner", "admin"] as const;
 export type SaudiCordTier = typeof ESHARQ_TIERS[number];
 
 export const SaudiCordTeamSeed: Readonly<Record<SaudiCordTier, readonly string[]>> = Object.freeze({
-    owner: ["681465758127226900"],
-    admin: [
-        "1072961475125182564",
-        "538699316232060938",
-        "1046545292100653177",
-        "683031548672606264",
-        "1161389239112568902",
-        "1295464673264664747",
-    ],
-    tester: [] as readonly string[],
-    supporter: [
-        "1320081396034965544",
-        "1459617061566287983",
-        "1098303427009843342",
-        "353359209460400138",
-        "428275226883915778",
-        "365991785396437014",
-        "863164009556607026",
-        "1220343848786464862",
-        "850239065495306240",
-        "1214355476029120515",
-        "349020193701363712",
-    ],
+    owner: ["1457893719121596619"],
+    admin: [],
 });
 
 // iife so #__PURE__ works correctly
