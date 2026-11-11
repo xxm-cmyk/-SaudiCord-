@@ -74,12 +74,19 @@ jobs:
                   HASH=$(git rev-parse --short HEAD)
                   gh release create v1.0.0-stable --target main --title "SaudiCord $HASH" --notes "Official Release" 2>/dev/null || \
                   gh release edit v1.0.0-stable --title "SaudiCord $HASH" --notes "Official Release"
-                  # Explicitly remove matching assets first. --clobber can fail
-                  # when the release already contains assets from a partial upload.
+                  # Delete matching assets through the GitHub REST API.
+                  # This avoids silently ignoring gh release delete-asset failures
+                  # and then failing the upload with "asset under the same name already exists".
+                  RELEASE_ID=$(gh api "repos/$GITHUB_REPOSITORY/releases/tags/v1.0.0-stable" --jq '.id')
                   for file in dist/release/*; do
                     [ -f "$file" ] || continue
                     name=$(basename "$file")
-                    gh release delete-asset v1.0.0-stable "$name" --yes 2>/dev/null || true
+                    asset_id=$(gh api --paginate "repos/$GITHUB_REPOSITORY/releases/$RELEASE_ID/assets" \
+                      --jq --arg name "$name" '.[] | select(.name == $name) | .id' | head -n 1)
+                    if [ -n "$asset_id" ]; then
+                      echo "Removing existing release asset: $name ($asset_id)"
+                      gh api --method DELETE "repos/$GITHUB_REPOSITORY/releases/assets/$asset_id"
+                    fi
                   done
                   gh release upload v1.0.0-stable dist/release/*
 
