@@ -164,7 +164,7 @@ function Updater() {
                     "Check for updates and apply them. Discord restarts only when you ask it to."
                 )}
             >
-                {isNewer ? <Newer {...commonProps} /> : <Updatable {...commonProps} />}
+                {isNewer ? <Newer {...commonProps} /> : <Updatable />}
             </Card>
 
             <Card
