@@ -513,7 +513,7 @@ export function MyProfilePage() {
     // شارتُه ظاهرة يُوسَم «داعم». والدعمُ حالةٌ مدفوعة يحكمها دورُ الداعم عند
     // الخادم، فلا يصحّ أن يمنحها العميلُ لنفسه بمجرّد وجود شارة.
     const tier = esharqTierOf(me.id);
-    const isSupporter = tier === "supporter" || selfServe.length > 0;
+    const isSupporter = selfServe.length > 0;
     const chip = tier !== null ? TIER_CHIP[tier]
         : isSupporter ? TIER_CHIP.supporter
             : { ar: "عضو", en: "Member" };
