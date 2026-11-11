@@ -176,7 +176,7 @@ function EquicordSettings() {
                     description={
                         isEsharqDonor(user?.id) && isVencordDonor(user?.id)
                             ? t(
-                                "يرى جميع مستخدمي Vencord شارة متبرّع Vencord، ويرى مستخدمو Esharq شارة داعم Esharq. لتغيير شارتك في Vencord تواصل مع @vending.machine، ولشارة Esharq افتح تذكرة في سيرفر Esharq.",
+                                "يرى جميع مستخدمي Vencord شارة متبرّع Vencord، ويرى مستخدمو سعودي كورد شارة داعم سعودي كورد. لتغيير شارتك في Vencord تواصل مع @vending.machine، ولشارة سعودي كورد افتح تذكرة في سيرفر سعودي كورد.",
                                 "All Vencord users see a Vencord donor badge, and Esharq users see an Esharq supporter badge. To change your Vencord badge contact @vending.machine, and for the Esharq badge open a ticket in the Esharq server."
                             )
                             : isVencordDonor(user?.id)
@@ -185,8 +185,8 @@ function EquicordSettings() {
                                     "All Vencord users can see your badge! You can manage your perks by messaging @vending.machine."
                                 )
                                 : t(
-                                    "يرى جميع مستخدمي Esharq شارتك! يمكنك إدارة مزاياك عبر فتح تذكرة في سيرفر Esharq.",
-                                    "All Esharq users can see your badge! You can manage your perks by opening a ticket in the Esharq server."
+                                    "يرى جميع مستخدمي سعودي كورد شارتك! يمكنك إدارة مزاياك عبر فتح تذكرة في سيرفر سعودي كورد.",
+                                    "All SaudiCord users can see your badge! You can manage your perks by opening a ticket in the SaudiCord server."
                                 )
                     }
                     cardImage={ESHARQ_LOGO}
@@ -198,8 +198,8 @@ function EquicordSettings() {
                 <SpecialCard
                     title={t("ادعم المشروع", "Support the Project")}
                     description={t(
-                        "يسعدنا دعمك لتطوير Esharq من خلال التبرع!",
-                        "Support Esharq development by donating!"
+                        "يسعدنا دعمك لتطوير سعودي كورد من خلال التبرع!",
+                        "Support SaudiCord development by donating!"
                     )}
                     cardImage={ESHARQ_LOGO}
                     backgroundColor="#c3a3ce"
@@ -212,8 +212,8 @@ function EquicordSettings() {
                     title={t("المساهمات", "Contributions")}
                     subtitle={t("شكراً لمساهمتك!", "Thank you for contributing!")}
                     description={t(
-                        "بفضل مساهمتك في Esharq، حصلت على شارة مميزة!",
-                        "As a contributor to Esharq, you earned a special badge!"
+                        "بفضل مساهمتك في سعودي كورد، حصلت على شارة مميزة!",
+                        "As a contributor to SaudiCord, you earned a special badge!"
                     )}
                     cardImage={ESHARQ_LOGO}
                     backgroundColor="#EDCC87"
@@ -290,8 +290,8 @@ function EquicordSettings() {
                 index={2}
                 title={t("إعدادات العميل", "Client Settings")}
                 subtitle={t(
-                    "اضبط كيفية عمل Esharq مع ديسكورد. تؤثر هذه الإعدادات على مظهر وسلوك تطبيق ديسكورد.",
-                    "Configure how Esharq works with Discord. These settings affect the appearance and behavior of the Discord app."
+                    "اضبط كيفية عمل سعودي كورد مع ديسكورد. تؤثر هذه الإعدادات على مظهر وسلوك تطبيق ديسكورد.",
+                    "Configure how SaudiCord works with Discord. These settings affect the appearance and behavior of the Discord app."
                 )}
             >
                 {switches.filter((s): s is Exclude<typeof s, false> => !!s).map(
