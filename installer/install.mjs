@@ -93,6 +93,8 @@ if (uninstall) {
 }
 
 if (!existsSync(PAYLOAD_SOURCE)) fail("ملف SaudiCord غير موجود بجانب المثبّت.");
+if (!existsSync(APP)) fail("ملف app.asar غير موجود؛ لم يتم إجراء أي تغيير.");
+if (!existsSync(BACKUP) && isOurs()) fail("نسخة Discord الأصلية غير موجودة؛ أوقفت التثبيت لحماية الملفات.");
 if (existsSync(BACKUP) && !isOurs())
     fail("يوجد تعديل آخر على Discord. لم يتم استبداله؛ أزله أولاً.");
 mkdirSync(PAYLOAD_DIR, { recursive: true });
