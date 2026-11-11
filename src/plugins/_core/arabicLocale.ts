@@ -44,7 +44,7 @@ installArabicTable(arabicMessages as unknown as ArabicMessageTable);
 forceGregorianForArabic();
 
 /**
- * تعريب إشراق — يجعل **العربية لغةً يعرفها ديسكورد** ويمدّه بجدولها.
+ * تعريب سعودي كورد — يجعل **العربية لغةً يعرفها ديسكورد** ويمدّه بجدولها.
  *
  * لا يلفّ دالّة واحدة ولا يترجم عند العرض: محرّك ديسكورد نفسه يعرض
  * العربية ⇒ **صفر تكلفة تشغيل، وبلا وميض إنجليزي**.
@@ -53,7 +53,7 @@ forceGregorianForArabic();
  * ومنها وحدها تُفعَّل. ولا تبديل تلقائي لأحد.
  */
 export default definePlugin({
-    name: "EsharqArabicLocale",
+    name: "SaudiCordArabicLocale",
     // 🔴 **نصّ واحد لا نصّان مجموعان**: `scripts/utils.ts` يقرأ الوصف من شجرة
     // المصدر ويشترطه نصّاً حرفياً، فيرفض أي جمع بـ`+` بـ«description is not a
     // string literal» — ويسقط بناء التكامل المستمرّ كلّه، ولا يظهر ذلك في
@@ -113,7 +113,7 @@ export default definePlugin({
                 .getCurrentValue().localization.locale.value ?? "en-US";
             // لغة ديسكورد هي الفيصل لا إعداد إضافاتنا: هذه مُدَدٌ داخل جمل
             // ديسكورد نفسه، فمن يقرؤه بالإنجليزية يجب أن تبقى إنجليزية.
-            if (!/^ar/i.test(locale)) return;
+            if (!/^ar\b/i.test(locale)) return;
             applyArabicRelativeTime(moment);
         } catch {
             // قراءة الإعدادات قد تسبق تهيئتها: تبقى المدّة إنجليزية، لا انهيار.
