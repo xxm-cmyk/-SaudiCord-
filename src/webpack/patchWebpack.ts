@@ -206,16 +206,26 @@ define(Function.prototype, "m", {
 
             // Overwrite Webpack's defineExports function to define the export descriptors configurable.
             // This is needed so we can later blacklist specific exports from Webpack search by making them non-enumerable
-            this.d = function (exports, definition) {
-                for (const key in definition) {
-                    if (Object.hasOwn(definition, key) && !Object.hasOwn(exports, key)) {
-                        Object.defineProperty(exports, key, {
-                            enumerable: true,
-                            configurable: true,
-                            get: definition[key],
-                        });
+            this.d = function (exports, getters, values) {
+                // Discord's current Webpack runtime supports both getter exports
+                // (second argument) and direct value exports (third argument).
+                // Keep the two-argument form compatible with older Webpack builds.
+                const defineExports = (definitions: Record<string, unknown> | undefined, descriptor: "get" | "value") => {
+                    if (definitions == null) return;
+
+                    for (const key in definitions) {
+                        if (Object.hasOwn(definitions, key) && !Object.hasOwn(exports, key)) {
+                            Object.defineProperty(exports, key, {
+                                enumerable: true,
+                                configurable: true,
+                                [descriptor]: definitions[key],
+                            });
+                        }
                     }
-                }
+                };
+
+                defineExports(getters, "get");
+                defineExports(values, "value");
             };
         };
     }
