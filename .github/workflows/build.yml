@@ -81,8 +81,8 @@ jobs:
                   for file in dist/release/*; do
                     [ -f "$file" ] || continue
                     name=$(basename "$file")
-                    asset_id=$(gh api --paginate "repos/$GITHUB_REPOSITORY/releases/$RELEASE_ID/assets" \
-                      --jq --arg name "$name" '.[] | select(.name == $name) | .id' | head -n 1)
+                    asset_id=$(gh api "repos/$GITHUB_REPOSITORY/releases/$RELEASE_ID/assets" | \
+                      jq -r --arg name "$name" '.[] | select(.name == $name) | .id' | head -n 1)
                     if [ -n "$asset_id" ]; then
                       echo "Removing existing release asset: $name ($asset_id)"
                       gh api --method DELETE "repos/$GITHUB_REPOSITORY/releases/assets/$asset_id"
