@@ -2,9 +2,13 @@
  * SaudiCord Windows installer helper
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
-import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from "node:fs";
+import {
+    copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync,
+    renameSync, rmSync, statSync, writeFileSync
+} from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { execFileSync } from "node:child_process";
 import { packAsar, readAsarFile } from "./asar.mjs";
 
 const ROOT = dirname(fileURLToPath(import.meta.url));
@@ -19,14 +23,35 @@ const local = process.env.LOCALAPPDATA;
 const roaming = process.env.APPDATA ?? process.env.HOME;
 const PAYLOAD_DIR = join(roaming, "SaudiCord");
 const PAYLOAD = join(PAYLOAD_DIR, "saudicord.asar");
+const argsLog = join(PAYLOAD_DIR, "installer.log");
 
-function fail(message) { console.error("SaudiCord: " + message); process.exit(1); }
-function guarded(fn) {
+function fail(message) {
+    try {
+        mkdirSync(PAYLOAD_DIR, { recursive: true });
+        writeFileSync(argsLog, message + "\n", "utf8");
+    } catch {}
+    console.error("SaudiCord: " + message);
+    process.exit(1);
+}
+function guarded(fn, target = "ملف Discord") {
     try { fn(); }
     catch (e) {
         if (["EPERM", "EBUSY", "EACCES"].includes(e.code))
-            fail("أغلق Discord بالكامل ثم أعد المحاولة. (" + e.code + ")");
+            fail("تعذّر تعديل " + target + " لأن Windows يمنع الوصول إليه (" + e.code + "). أغلق Discord من شريط النظام، ثم أعد المحاولة.\nالتفاصيل: " + (e.message ?? e));
         throw e;
+    }
+}
+function assertDiscordClosed() {
+    if (process.platform !== "win32") return;
+    let output = "";
+    try { output = execFileSync("tasklist", ["/FO", "CSV", "/NH"], { encoding: "utf8", windowsHide: true }); }
+    catch { return; }
+    const running = output.split(/\r?\n/).filter(line =>
+        /^(?:"?Discord(?:PTB|Canary)?\.exe"?),/i.test(line)
+    );
+    if (running.length) {
+        const names = [...new Set(running.map(line => line.split(",")[0].replaceAll('"', "")))];
+        fail("لا تزال عملية Discord تعمل بالخلفية: " + names.join("، ") + ". أغلقها من إدارة المهام ثم أعد المحاولة.");
     }
 }
 function latestResources(base) {
@@ -55,9 +80,11 @@ function resolveResources() {
     if (!result) fail("لم يتم العثور على Discord " + branch.toUpperCase() + ". ثبّت Discord أولاً.");
     return result;
 }
+assertDiscordClosed();
 const RESOURCES = resolveResources();
 const APP = join(RESOURCES, "app.asar");
-const BACKUP = join(RESOURCES, "_app.asar");
+const LEGACY_BACKUP = join(RESOURCES, "_app.asar");
+const SAUDI_BACKUP = join(RESOURCES, "app.saudicord.original.asar");
 function referencesPayload(text) {
     const p = PAYLOAD_DIR;
     return text.includes(p) || text.includes(p.split("\\").join("\\\\"));
@@ -78,27 +105,55 @@ function isOurs() {
         return !!index && referencesPayload(index.toString("utf8"));
     } catch { return false; }
 }
-
+function quarantinePreviousClients() {
+    const candidates = [
+        ["Vencord", join(roaming, "Vencord")],
+        ["BetterDiscord", join(roaming, "BetterDiscord")],
+        ["OpenAsar", join(roaming, "OpenAsar")]
+    ];
+    const found = candidates.filter(([, path]) => existsSync(path));
+    if (!found.length) return;
+    const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const destination = join(PAYLOAD_DIR, "previous-clients-backup", stamp);
+    mkdirSync(destination, { recursive: true });
+    for (const [name, path] of found) {
+        const target = join(destination, name);
+        guarded(() => renameSync(path, target), name);
+        console.log("تم نقل ملفات " + name + " إلى نسخة احتياطية: " + target);
+    }
+}
 if (uninstall) {
     if (!isOurs()) fail("التثبيت الحالي ليس SaudiCord؛ لم يتم تغيير أي ملف.");
-    if (!existsSync(BACKUP)) fail("النسخة الأصلية مفقودة؛ أوقفت الإزالة لحماية Discord.");
+    const restoreFrom = existsSync(SAUDI_BACKUP) ? SAUDI_BACKUP : LEGACY_BACKUP;
+    if (!existsSync(restoreFrom)) fail("النسخة الأصلية مفقودة؛ أوقفت الإزالة لحماية Discord.");
     guarded(() => {
         rmSync(APP, { recursive: true, force: true });
-        renameSync(BACKUP, APP);
+        renameSync(restoreFrom, APP);
     });
     if (existsSync(PAYLOAD)) rmSync(PAYLOAD, { force: true });
-    if (existsSync(PAYLOAD_DIR) && readdirSync(PAYLOAD_DIR).length === 0) rmSync(PAYLOAD_DIR);
-    console.log("تمت إزالة SaudiCord واستعادة Discord الأصلي.");
+    console.log("تمت إزالة SaudiCord واستعادة Discord. النسخ الاحتياطية للعملاء السابقين محفوظة داخل " + PAYLOAD_DIR);
     process.exit(0);
 }
-
 if (!existsSync(PAYLOAD_SOURCE)) fail("ملف SaudiCord غير موجود بجانب المثبّت.");
 if (!existsSync(APP)) fail("ملف app.asar غير موجود؛ لم يتم إجراء أي تغيير.");
-if (!existsSync(BACKUP) && isOurs()) fail("نسخة Discord الأصلية غير موجودة؛ أوقفت التثبيت لحماية الملفات.");
-if (existsSync(BACKUP) && !isOurs())
-    fail("يوجد تعديل آخر على Discord. لم يتم استبداله؛ أزله أولاً.");
+if (isOurs() && !existsSync(SAUDI_BACKUP) && !existsSync(LEGACY_BACKUP))
+    fail("نسخة Discord الأصلية غير موجودة؛ أوقفت التثبيت لحماية الملفات.");
+if (existsSync(SAUDI_BACKUP) && !isOurs())
+    fail("وجدت نسخة احتياطية سابقة لـ SaudiCord لكن app.asar ليس تابعاً له. لم يتم تغيير أي ملف.");
 mkdirSync(PAYLOAD_DIR, { recursive: true });
+quarantinePreviousClients();
 copyFileSync(PAYLOAD_SOURCE, PAYLOAD);
+if (!existsSync(SAUDI_BACKUP)) {
+    // A legacy _app.asar is commonly the clean copy kept by client-mod installers.
+    // Prefer it as the uninstall restore point, while preserving the currently active app.asar.
+    const restoreSource = existsSync(LEGACY_BACKUP) ? LEGACY_BACKUP : APP;
+    if (restoreSource === APP) {
+        copyFileSync(APP, SAUDI_BACKUP);
+    } else {
+        copyFileSync(APP, join(PAYLOAD_DIR, "previous-clients-backup", "active-app-before-install.asar"));
+        copyFileSync(restoreSource, SAUDI_BACKUP);
+    }
+}
 const indexJs = `// SaudiCord bridge
 require(${JSON.stringify(PAYLOAD)});
 `;
@@ -108,18 +163,10 @@ const packageJson = JSON.stringify({
     [MARKER]: { installedAt: new Date().toISOString() }
 }, null, 2);
 const bridge = packAsar({ "package.json": packageJson, "index.js": indexJs });
-if (!existsSync(BACKUP)) {
-    guarded(() => {
-        renameSync(APP, BACKUP);
-        try { writeFileSync(APP, bridge); }
-        catch (e) { renameSync(BACKUP, APP); throw e; }
-    });
-} else {
-    guarded(() => {
-        const temp = join(RESOURCES, "app.saudicord.tmp");
-        writeFileSync(temp, bridge);
-        rmSync(APP, { recursive: true, force: true });
-        renameSync(temp, APP);
-    });
-}
+guarded(() => {
+    const temp = join(RESOURCES, "app.saudicord.tmp");
+    writeFileSync(temp, bridge);
+    if (existsSync(APP)) rmSync(APP, { recursive: true, force: true });
+    renameSync(temp, APP);
+}, APP);
 console.log("تم تثبيت SaudiCord على Discord " + branch.toUpperCase() + ". أعد تشغيل Discord.");
