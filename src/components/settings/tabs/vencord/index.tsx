@@ -347,8 +347,8 @@ function EquicordSettings() {
 export default wrapTab(EquicordSettings, "Equicord Settings");
 
 export function isEsharqDonor(userId: string): boolean {
-    // Card depends only on Esharq's own donor list, so donating to Equicord doesn't trigger it.
-    return hasSaudiCordTier(userId, "supporter");
+    // The legacy supporter tier was retired from SaudiCord team ranks.
+    return false;
 }
 
 export function isVencordDonor(userId: string): boolean {
