@@ -68,7 +68,7 @@ function EquibopSection() {
                     <HeadingSecondary>{t("إصدار القوقعة قديم", "Shell outdated")}</HeadingSecondary>
                     <Flex flexDirection="column" gap="0.5em">
                         <Paragraph>{t("إصدارك من إشراق لسطح المكتب قديم.", "Your version of Esharq Desktop is outdated.")}</Paragraph>
-                        <Button variant="link" onClick={() => VesktopNative.app.openUpdater()}>{t("افتح مُحدِّث إشراق لسطح المكتب", "Open the Esharq Desktop updater")}</Button>
+                        <Button variant="link" onClick={() => VesktopNative.app.openUpdater()}>{t("افتح مُحدِّث SaudiCord لسطح المكتب", "Open the Esharq Desktop updater")}</Button>
                     </Flex>
                 </PlainCard>
             )}
@@ -100,10 +100,10 @@ function Updater() {
 
             <Card
                 index={0}
-                title={t("مُحدِّث إشراق", "Esharq Updater")}
+                title={t("مُحدِّث SaudiCord", "SaudiCord Updater")}
                 subtitle={t(
-                    "يجلب إشراق تحديثاته من مستودعه ويُثبّتها عند طلبك، أو في الخلفية إن أذنت له.",
-                    "Esharq pulls its updates from its repository and installs them on request, or in the background if you allow it."
+                    "يجلب SaudiCord تحديثاته من المستودع الرسمي ويثبّتها عند طلبك.",
+                    "SaudiCord downloads and installs updates from its official repository when you ask."
                 )}
                 badge={isNewer
                     ? t("إصدار أحدث من المستودع", "Ahead of the repository")
@@ -171,15 +171,15 @@ function Updater() {
                 index={3}
                 title={t("تفضيلات التحديث", "Update preferences")}
                 subtitle={t(
-                    "تحكّم في كيفية تحديث إشراق نفسه.",
-                    "Control how Esharq updates itself."
+                    "تحكّم في كيفية تحديث SaudiCord.",
+                    "Control how SaudiCord updates itself."
                 )}
             >
                 <FormSwitch
                     title={t("تحديث تلقائي", "Auto update")}
                     description={t(
-                        "ينزّل إشراق التحديثات ويثبّتها في الخلفية بلا سؤال. وتظهر التغييرات بعد إعادة تشغيل ديسكورد.",
-                        "Esharq downloads and installs updates in the background without asking. The changes appear after Discord restarts."
+                        "ينزّل SaudiCord التحديثات ويثبّتها في الخلفية بلا سؤال. وتظهر التغييرات بعد إعادة تشغيل Discord.",
+                        "SaudiCord downloads and installs updates in the background without asking. Changes appear after Discord restarts."
                     )}
                     value={settings.autoUpdate}
                     onChange={(v: boolean) => settings.autoUpdate = v}
@@ -190,7 +190,7 @@ function Updater() {
                     onChange={(v: boolean) => settings.autoUpdateNotification = v}
                     title={t("إشعار عند اكتمال التحديث", "Notify when an update finishes")}
                     description={t(
-                        "يصلك إشعار حين ينتهي تنزيل تحديث في الخلفية.",
+                        "يصلك إشعار حين ينتهي تنزيل تحديث SaudiCord في الخلفية.",
                         "You get a notification when a background update finishes downloading."
                     )}
                     disabled={!settings.autoUpdate}
