@@ -150,7 +150,9 @@ if (!existsSync(SAUDI_BACKUP)) {
     if (restoreSource === APP) {
         copyFileSync(APP, SAUDI_BACKUP);
     } else {
-        copyFileSync(APP, join(PAYLOAD_DIR, "previous-clients-backup", "active-app-before-install.asar"));
+        const quarantineRoot = join(PAYLOAD_DIR, "previous-clients-backup");
+        mkdirSync(quarantineRoot, { recursive: true });
+        copyFileSync(APP, join(quarantineRoot, "active-app-before-install.asar"));
         copyFileSync(restoreSource, SAUDI_BACKUP);
     }
 }
