@@ -71,7 +71,7 @@ export function Newer(props: CommonProps) {
     );
 }
 
-export function Updatable(props: CommonProps) {
+export function Updatable() {
     const [isUpdating, setIsUpdating] = useState(false);
 
     return (
