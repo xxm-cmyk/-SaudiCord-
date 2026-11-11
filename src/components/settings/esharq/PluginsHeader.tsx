@@ -188,7 +188,7 @@ export function PluginsHeader({ total, enabled, esharq, userPlugins, onDisableAl
                 <Tile
                     index={2}
                     value={<CountUp value={esharq} />}
-                    label={t("من إشراق", "Built by Esharq")}
+                    label={t("من سعودي كورد", "Built by SaudiCord")}
                     hint={t("لا توجد في المشروع الأصل", "not found upstream")}
                 />
                 {/* تظهر لمن كتب إضافةً بنفسه فقط — وإلّا فهي خانة تقول «صفر» دائماً. */}
