@@ -206,7 +206,7 @@ define(Function.prototype, "m", {
 
             // Overwrite Webpack's defineExports function to define the export descriptors configurable.
             // This is needed so we can later blacklist specific exports from Webpack search by making them non-enumerable
-            this.d = function (exports, getters, values) {
+            this.d = function (exports, getters, values?) {
                 // Discord's current Webpack runtime supports both getter exports
                 // (second argument) and direct value exports (third argument).
                 // Keep the two-argument form compatible with older Webpack builds.
